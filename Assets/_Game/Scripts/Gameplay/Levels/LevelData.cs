@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using BubbleFruitLoop.Core;
 
@@ -31,3 +31,4 @@ namespace BubbleFruitLoop.Gameplay
         [HideInInspector] public int boxLayoutVersion;
     }
 }
+

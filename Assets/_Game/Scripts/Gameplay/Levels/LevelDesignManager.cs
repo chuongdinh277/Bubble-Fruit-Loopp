@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,23 +38,23 @@ namespace BubbleFruitLoop.Editor
         [Required] public Transform bubbleContainer;
         [Required] public Transform boxContainer;
 
-        [Title("Box Queue Layout", "Xếp thành 3 cột; hàng dưới sẽ được đẩy dần lên khi chơi")]
+        [Title("Box Queue Layout", "Xáº¿p thÃ nh 3 cá»™t; hÃ ng dÆ°á»›i sáº½ Ä‘Æ°á»£c Ä‘áº©y dáº§n lÃªn khi chÆ¡i")]
         [MinValue(0.1f)] public float boxColumnSpacing = 1.65f;
         public float boxFirstRowY = -2.45f;
         [MinValue(0.1f)] public float boxRowSpacing = 1.72f;
         [MinValue(0.1f)] public float boxDisplayScale = 1.12f;
 
-        [Title("Bubble Sizing", "Bubble nhiều fruit sẽ lớn hơn nhẹ, nhưng vẫn giữ kiểu nhỏ gọn")]
-        [MinValue(0.1f), LabelText("Size nhỏ nhất")]
+        [Title("Bubble Sizing", "Bubble nhiá»u fruit sáº½ lá»›n hÆ¡n nháº¹, nhÆ°ng váº«n giá»¯ kiá»ƒu nhá» gá»n")]
+        [MinValue(0.1f), LabelText("Size nhá» nháº¥t")]
         public float minBubbleScale = 0.36f;
 
-        [MinValue(0.1f), LabelText("Size lớn nhất")]
+        [MinValue(0.1f), LabelText("Size lá»›n nháº¥t")]
         public float maxBubbleScale = 0.48f;
 
-        [MinValue(1), LabelText("Số fruit ở size nhỏ nhất")]
+        [MinValue(1), LabelText("Sá»‘ fruit á»Ÿ size nhá» nháº¥t")]
         public int minFruitForSizing = 3;
 
-        [MinValue(1), LabelText("Số fruit ở size lớn nhất")]
+        [MinValue(1), LabelText("Sá»‘ fruit á»Ÿ size lá»›n nháº¥t")]
         public int maxFruitForSizing = 8;
 
         [System.Serializable]
@@ -126,13 +126,13 @@ namespace BubbleFruitLoop.Editor
         [System.Serializable]
         public class FruitCountInfo
         {
-            [ReadOnly, LabelText("Loại quả")]
+            [ReadOnly, LabelText("Loáº¡i quáº£")]
             public FruitType fruitType;
 
-            [ReadOnly, LabelText("Số lượng")]
+            [ReadOnly, LabelText("Sá»‘ lÆ°á»£ng")]
             public int count;
 
-            [ReadOnly, LabelText("Có thể chia Box4")]
+            [ReadOnly, LabelText("CÃ³ thá»ƒ chia Box4")]
             public bool canBuildBoxes;
         }
 
@@ -643,12 +643,12 @@ namespace BubbleFruitLoop.Editor
 #if UNITY_EDITOR
             EditorUtility.SetDirty(this);
             if (fruitCountSummary.Count == 0)
-                Debug.LogWarning("Không tìm thấy fruit nào trong danh sách bubble.", this);
+                Debug.LogWarning("KhÃ´ng tÃ¬m tháº¥y fruit nÃ o trong danh sÃ¡ch bubble.", this);
 #endif
         }
 
         [HorizontalGroup("BoxGeneration")]
-        [Button("2. Random Box Từ Kết Quả Check", ButtonSizes.Large)]
+        [Button("2. Random Box Tá»« Káº¿t Quáº£ Check", ButtonSizes.Large)]
         [GUIColor(0.35f, 1f, 0.45f)]
         public void GenerateRandomBoxesFromBubbles()
         {
@@ -664,10 +664,10 @@ namespace BubbleFruitLoop.Editor
 
             if (invalid.Count > 0)
             {
-                EditorUtility.DisplayDialog("Không thể tạo box",
-                    "Các số lượng sau không thể chia chính xác thành Box4:\n\n" +
+                EditorUtility.DisplayDialog("KhÃ´ng thá»ƒ táº¡o box",
+                    "CÃ¡c sá»‘ lÆ°á»£ng sau khÃ´ng thá»ƒ chia chÃ­nh xÃ¡c thÃ nh Box4:\n\n" +
                     string.Join("\n", invalid) +
-                    "\n\nHãy sửa số fruit trong bubble trước.", "OK");
+                    "\n\nHÃ£y sá»­a sá»‘ fruit trong bubble trÆ°á»›c.", "OK");
                 return;
             }
 
@@ -809,7 +809,7 @@ namespace BubbleFruitLoop.Editor
         }
 
         [HorizontalGroup("TrackBoundary")]
-        [Button("Boundary: Chỉnh Tay", ButtonSizes.Medium)]
+        [Button("Boundary: Chá»‰nh Tay", ButtonSizes.Medium)]
         [GUIColor(1f, 0.72f, 0.3f)]
         private void EnableManualTrackBoundary()
         {
@@ -866,7 +866,7 @@ namespace BubbleFruitLoop.Editor
             if (bubbleContainer != null && bubbleContainer == boxContainer)
             {
 #if UNITY_EDITOR
-                Debug.LogError("LevelDesignManager: Bubble Container và Box Container phải là hai object riêng. Không xoá scene để tránh mất bố cục.", this);
+                Debug.LogError("LevelDesignManager: Bubble Container vÃ  Box Container pháº£i lÃ  hai object riÃªng. KhÃ´ng xoÃ¡ scene Ä‘á»ƒ trÃ¡nh máº¥t bá»‘ cá»¥c.", this);
 #endif
                 return;
             }
@@ -921,7 +921,7 @@ namespace BubbleFruitLoop.Editor
 
             bool valid = bubbleContainer != null && boxContainer != null && bubbleContainer != boxContainer;
             if (!valid)
-                Debug.LogError("LevelDesignManager cần BubbleContainer và BoxContainer riêng biệt.", this);
+                Debug.LogError("LevelDesignManager cáº§n BubbleContainer vÃ  BoxContainer riÃªng biá»‡t.", this);
             return valid;
         }
 
@@ -1086,3 +1086,4 @@ namespace BubbleFruitLoop.Editor
         }
     }
 }
+

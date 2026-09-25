@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using BubbleFruitLoop.Pooling;
 using UnityEngine;
@@ -396,3 +396,4 @@ namespace BubbleFruitLoop.Gameplay
         }
     }
 }
+

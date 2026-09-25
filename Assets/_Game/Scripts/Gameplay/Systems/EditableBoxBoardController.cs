@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -792,7 +792,7 @@ namespace BubbleFruitLoop.Gameplay
             SpriteRenderer sprite = fruit.GetComponentInChildren<SpriteRenderer>(true);
             // Imported fruit sprites are normally rendered with a white tint, so
             // SpriteRenderer.color cannot identify the fruit hue. Drive the trail
-            // from the gameplay type—the same mapping used by its target box.
+            // from the gameplay typeâ€”the same mapping used by its target box.
             Color color = ColorFor(fruit.Type);
             GameObject trailObject = new($"{fruit.name} Flight Trail");
             trailObject.transform.position = fruit.CachedTransform.position;
@@ -846,3 +846,4 @@ namespace BubbleFruitLoop.Gameplay
         };
     }
 }
+

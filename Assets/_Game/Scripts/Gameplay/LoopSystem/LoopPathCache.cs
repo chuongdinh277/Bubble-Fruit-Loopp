@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -181,3 +181,4 @@ namespace BubbleFruitLoop.Gameplay
         public IReadOnlyList<LoopSample> GetSamples() => samples;
     }
 }
+

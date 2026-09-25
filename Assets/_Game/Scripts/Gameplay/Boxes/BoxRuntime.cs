@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -109,3 +109,4 @@ namespace BubbleFruitLoop.Gameplay
         public void Complete() => State = BoxState.Completed;
     }
 }
+

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using BubbleFruitLoop.Core;
 using BubbleFruitLoop.Managers;
 
@@ -254,3 +254,4 @@ namespace BubbleFruitLoop.Gameplay
         }
     }
 }
+

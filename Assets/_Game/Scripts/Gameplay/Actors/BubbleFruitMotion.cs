@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BubbleFruitLoop.Gameplay
 {
@@ -171,3 +171,4 @@ namespace BubbleFruitLoop.Gameplay
         }
     }
 }
+

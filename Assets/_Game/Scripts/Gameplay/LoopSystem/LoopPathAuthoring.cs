@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace BubbleFruitLoop.Gameplay
@@ -10,7 +10,7 @@ namespace BubbleFruitLoop.Gameplay
         [SerializeField] private Color pathColor = new(0.2f, 1f, 0.55f, 0.9f);
         [SerializeField, Min(0.05f)] private float pointRadius = 0.13f;
         [Header("Physical Track Walls")]
-        [Tooltip("Bật: biên tự chạy theo các điểm P00-P19. Tắt: có thể chỉnh Edge Collider thủ công.")]
+        [Tooltip("Báº­t: biÃªn tá»± cháº¡y theo cÃ¡c Ä‘iá»ƒm P00-P19. Táº¯t: cÃ³ thá»ƒ chá»‰nh Edge Collider thá»§ cÃ´ng.")]
         [SerializeField] private bool autoFitBoundaries = true;
         [SerializeField, Min(0.15f)] private float trackHalfWidth = 0.43f;
         [SerializeField, Min(0f)] private float wallEdgeRadius = 0.05f;
@@ -251,3 +251,4 @@ namespace BubbleFruitLoop.Gameplay
         }
     }
 }
+

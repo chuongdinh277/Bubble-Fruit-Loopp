@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BubbleFruitLoop.Managers;
 
 namespace BubbleFruitLoop.Gameplay
@@ -54,3 +54,4 @@ namespace BubbleFruitLoop.Gameplay
         }
     }
 }
+

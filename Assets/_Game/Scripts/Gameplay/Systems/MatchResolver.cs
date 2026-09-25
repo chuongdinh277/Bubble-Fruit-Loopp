@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using BubbleFruitLoop.Core;
 using BubbleFruitLoop.Managers;
 
@@ -55,3 +55,4 @@ namespace BubbleFruitLoop.Gameplay
         }
     }
 }
+

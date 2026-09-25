@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BubbleFruitLoop.Pooling;
 using UnityEngine;
 
@@ -32,8 +32,8 @@ namespace BubbleFruitLoop.Gameplay
             get
             {
                 // Always return the per-instance sprite, not the static catalog.
-                // The catalog maps type→sprite globally, so it returns the LAST sprite
-                // assigned to any fruit of that type — wrong when pool reuses actors.
+                // The catalog maps typeâ†’sprite globally, so it returns the LAST sprite
+                // assigned to any fruit of that type â€” wrong when pool reuses actors.
                 if (configuredSprite != null) return configuredSprite;
                 SpriteRenderer sr = visualRenderer as SpriteRenderer;
                 if (sr == null) sr = GetComponentInChildren<SpriteRenderer>(true);
@@ -332,3 +332,4 @@ namespace BubbleFruitLoop.Gameplay
         }
     }
 }
+

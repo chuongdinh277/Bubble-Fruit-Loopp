@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace BubbleFruitLoop.Gameplay
@@ -685,3 +685,4 @@ namespace BubbleFruitLoop.Gameplay
         }
     }
 }
+

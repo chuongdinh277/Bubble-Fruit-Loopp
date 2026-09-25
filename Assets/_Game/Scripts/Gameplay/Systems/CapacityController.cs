@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace BubbleFruitLoop.Gameplay
 {
@@ -47,3 +47,4 @@ namespace BubbleFruitLoop.Gameplay
         }
     }
 }
+
