@@ -1,0 +1,249 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75459ed28d8e5424baa45eb597239d47, type: 3}
+  m_Name: Level_02
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.LevelData
+  bubbles:
+  - position: {x: 1.79, y: 5.66}
+    bubbleScale: 0.48
+    fruits: 0000000000000000000000000000000000000000000000000000000000000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: 1.75, y: 16.64}
+    bubbleScale: 0.408
+    fruits: 0100000001000000010000000100000001000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: 2.7, y: 14.69}
+    bubbleScale: 0.384
+    fruits: 00000000000000000000000000000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: -2, y: 16.12}
+    bubbleScale: 0.48
+    fruits: 0300000003000000030000000300000003000000030000000300000003000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: 0, y: 16.12}
+    bubbleScale: 0.384
+    fruits: 04000000040000000400000004000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: -1.17, y: 6.42}
+    bubbleScale: 0.48
+    fruits: 0200000002000000020000000200000002000000020000000200000002000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: -2, y: 13.97}
+    bubbleScale: 0.456
+    fruits: 02000000020000000100000001000000010000000200000002000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: 0.54, y: 14.03}
+    bubbleScale: 0.432
+    fruits: 000000000000000000000000000000000000000000000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: 2.21, y: 12.26}
+    bubbleScale: 0.408
+    fruits: 0100000001000000010000000100000001000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: -1.09, y: 11.83}
+    bubbleScale: 0.432
+    fruits: 010000000100000001000000000000000200000002000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: 0.85, y: 10.07}
+    bubbleScale: 0.456
+    fruits: 03000000030000000300000003000000040000000400000004000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: -1.82, y: 9.52}
+    bubbleScale: 0.432
+    fruits: 030000000300000003000000040000000300000000000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  - position: {x: 1.52, y: 8}
+    bubbleScale: 0.432
+    fruits: 020000000200000002000000020000000200000002000000
+    fruitScales:
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+    - {x: 0.3, y: 0.3, z: 0.3}
+  boxes:
+  - position: {x: 1.65, y: -2.45}
+    fruitType: 2
+    capacity: 4
+    column: 0
+    queueOrder: 0
+  - position: {x: 0, y: -2.45}
+    fruitType: 1
+    capacity: 4
+    column: 1
+    queueOrder: 0
+  - position: {x: -1.65, y: -2.45}
+    fruitType: 2
+    capacity: 4
+    column: 2
+    queueOrder: 0
+  - position: {x: 1.65, y: -4.4}
+    fruitType: 3
+    capacity: 4
+    column: 0
+    queueOrder: 1
+  - position: {x: 0, y: -4.4}
+    fruitType: 2
+    capacity: 4
+    column: 1
+    queueOrder: 1
+  - position: {x: -1.65, y: -4.4}
+    fruitType: 0
+    capacity: 4
+    column: 2
+    queueOrder: 1
+  - position: {x: 1.65, y: -6.3500004}
+    fruitType: 3
+    capacity: 4
+    column: 0
+    queueOrder: 2
+  - position: {x: 0, y: -6.3500004}
+    fruitType: 1
+    capacity: 4
+    column: 1
+    queueOrder: 2
+  - position: {x: -1.65, y: -6.3500004}
+    fruitType: 0
+    capacity: 4
+    column: 2
+    queueOrder: 2
+  - position: {x: 1.65, y: -8.3}
+    fruitType: 1
+    capacity: 4
+    column: 0
+    queueOrder: 3
+  - position: {x: 0, y: -8.3}
+    fruitType: 0
+    capacity: 4
+    column: 1
+    queueOrder: 3
+  - position: {x: -1.65, y: -8.3}
+    fruitType: 0
+    capacity: 4
+    column: 2
+    queueOrder: 3
+  - position: {x: 1.65, y: -10.25}
+    fruitType: 3
+    capacity: 4
+    column: 0
+    queueOrder: 4
+  - position: {x: 0, y: -10.25}
+    fruitType: 4
+    capacity: 4
+    column: 1
+    queueOrder: 4
+  - position: {x: -1.65, y: -10.25}
+    fruitType: 2
+    capacity: 4
+    column: 2
+    queueOrder: 4
+  - position: {x: 1.65, y: -12.200001}
+    fruitType: 1
+    capacity: 4
+    column: 0
+    queueOrder: 5
+  - position: {x: 0, y: -12.200001}
+    fruitType: 0
+    capacity: 4
+    column: 1
+    queueOrder: 5
+  - position: {x: -1.65, y: -12.200001}
+    fruitType: 4
+    capacity: 4
+    column: 2
+    queueOrder: 5
+  - position: {x: 1.65, y: -14.150001}
+    fruitType: 2
+    capacity: 4
+    column: 0
+    queueOrder: 6
+  - position: {x: 0, y: -14.150001}
+    fruitType: 3
+    capacity: 4
+    column: 1
+    queueOrder: 6
+  boxLayoutVersion: 1
