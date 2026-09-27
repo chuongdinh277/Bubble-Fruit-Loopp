@@ -12,11 +12,11 @@ namespace BubbleFruitLoop.Editor
         private const string LayoutName = "BOX MODELS (EDIT LAYOUT)";
         private const string VersionKey = "BubbleFruitLoop.BoxSceneLayoutVersion";
         // 29 repairs SampleScene after the authored presentation/layout objects were deleted.
-        private const int Version = 33;
+        private const int Version = 34;
         private const float ColumnSpacing = 1.65f;
         private const float BoxScale = 1.05f;
         private const float FirstRowWorldY = -2.45f;
-        private const float RowWorldSpacing = 1.35f;
+        private const float RowWorldSpacing = 1.72f;
 
         [InitializeOnLoadMethod]
         private static void ScheduleBuild()

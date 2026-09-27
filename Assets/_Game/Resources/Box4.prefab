@@ -1381,7 +1381,7 @@ MonoBehaviour:
   - {fileID: 4122656471985604475}
   - {fileID: 3994112158413306794}
   fullVfx: {fileID: 0}
-  labelFireworkPrefab: {fileID: 8176850701479282271, guid: b219c04f384e7f345bb8ae1fef443965, type: 3}
+  labelFireworkPrefab: {fileID: 0}
   leftLid: {fileID: 6802743741582326928}
   rightLid: {fileID: 1846962754267717131}
   innerTray: {fileID: 155230133943933162}
@@ -1847,7 +1847,7 @@ SpriteMask:
   m_BackSortingLayerID: 0
   m_FrontSortingLayer: 0
   m_BackSortingLayer: 0
-  m_FrontSortingOrder: 16
+  m_FrontSortingOrder: 21
   m_BackSortingOrder: 14
   m_IsCustomRangeActive: 1
   m_SpriteSortPoint: 0

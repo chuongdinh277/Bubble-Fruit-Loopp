@@ -34,7 +34,7 @@ namespace BubbleFruitLoop.UI
             if (transitioning) return;
             transitioning = true;
             int current = DataManager.Instance != null ? DataManager.Instance.GetLevel() : 1;
-            if (DataManager.Instance != null) DataManager.Instance.SetLevel(current == 1 ? 2 : 1);
+            if (DataManager.Instance != null) DataManager.Instance.SetLevel(current + 1);
             LoadingScreenController.Play();
             Scene scene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(scene.buildIndex >= 0 ? scene.buildIndex : 0);

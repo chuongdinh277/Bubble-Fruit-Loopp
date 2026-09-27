@@ -11,6 +11,14 @@ namespace BubbleFruitLoop.Gameplay
         [SerializeField] private SpriteRenderer frameRenderer;
         [SerializeField] private SpriteRenderer fillRenderer;
         [SerializeField] private TMP_Text countLabel;
+        [SerializeField] private Sprite orangeFillSprite;
+        [SerializeField] private Sprite redFillSprite;
+        private Sprite greenFillSprite;
+        private SpriteRenderer transitionRenderer;
+        private Sprite transitionTarget;
+        private Color baseFillColor = Color.white;
+        private float transitionElapsed;
+        private const float FillColorTransitionDuration = 0.28f;
         [Header("Scene Preview")]
         [SerializeField, Range(0f, 1f)] private float previewFillAmount;
         [SerializeField, Min(1)] private int previewCapacity = 30;
@@ -18,16 +26,21 @@ namespace BubbleFruitLoop.Gameplay
         private Vector3 fullFillPosition;
         private float fullFillWidth;
         private float fullFillLeftEdge;
+        private float displayedFillRatio;
+        private float fillRatioVelocity;
+        private bool hasDisplayedFillRatio;
         private SpriteMask fillMask;
         private static Sprite maskSprite;
 
         public void Configure(SpriteRenderer frame, SpriteRenderer fill, TMP_Text label,
-            EditableFruitLoopController controller = null)
+            EditableFruitLoopController controller = null, Sprite orangeFill = null, Sprite redFill = null)
         {
             frameRenderer = frame;
             fillRenderer = fill;
             countLabel = label;
             loop = controller;
+            if (orangeFill != null) orangeFillSprite = orangeFill;
+            if (redFill != null) redFillSprite = redFill;
             PrepareCountLabel();
             AlignInsideLoopBoundary();
             CacheFullFillGeometry();
@@ -63,6 +76,7 @@ namespace BubbleFruitLoop.Gameplay
         {
             if (loop == null) loop = FindFirstObjectByType<EditableFruitLoopController>();
             Refresh();
+            AdvanceFillColorTransition(Time.deltaTime);
         }
 
         private void OnValidate()
@@ -102,6 +116,11 @@ namespace BubbleFruitLoop.Gameplay
         private void CacheFullFillGeometry()
         {
             if (fillRenderer == null || fillRenderer.sprite == null) return;
+            if (greenFillSprite == null)
+            {
+                greenFillSprite = fillRenderer.sprite;
+                baseFillColor = fillRenderer.color;
+            }
             // Never treat the current fill transform as its full size: at 0/30
             // that transform is deliberately almost zero and may be serialized
             // by an editor repair. Reconstruct 100% width from the stable frame.
@@ -150,9 +169,26 @@ namespace BubbleFruitLoop.Gameplay
                 ratio = Mathf.Clamp01(previewFillAmount);
                 count = Mathf.RoundToInt(ratio * capacity);
             }
+            if (!Application.isPlaying || !hasDisplayedFillRatio)
+            {
+                displayedFillRatio = ratio;
+                fillRatioVelocity = 0f;
+                hasDisplayedFillRatio = true;
+            }
+            else
+            {
+                displayedFillRatio = Mathf.SmoothDamp(displayedFillRatio, ratio,
+                    ref fillRatioVelocity, 0.22f, Mathf.Infinity, Time.unscaledDeltaTime);
+                if (Mathf.Abs(displayedFillRatio - ratio) < 0.001f)
+                {
+                    displayedFillRatio = ratio;
+                    fillRatioVelocity = 0f;
+                }
+            }
             if (countLabel != null) countLabel.text = $"{count}/{capacity}";
             if (fillRenderer == null || fullFillWidth <= 0f) return;
-            float visibleRatio = Mathf.Max(0.001f, ratio);
+            UpdateFillColor(count);
+            float visibleRatio = Mathf.Max(0.001f, displayedFillRatio);
             if (fillMask != null)
             {
                 fillRenderer.transform.localScale = fullFillScale;
@@ -163,7 +199,7 @@ namespace BubbleFruitLoop.Gameplay
                     fullFillPosition.y, -0.02f);
                 fillMask.transform.localScale = new Vector3(maskWidth,
                     fullFillWidth * 0.28f, 1f);
-                fillRenderer.enabled = count > 0;
+                fillRenderer.enabled = displayedFillRatio > 0.001f;
                 return;
             }
 
@@ -177,7 +213,90 @@ namespace BubbleFruitLoop.Gameplay
             position.x = fullFillLeftEdge
                 - fillRenderer.sprite.bounds.min.x * scale.x;
             fillRenderer.transform.localPosition = position;
-            fillRenderer.enabled = count > 0;
+            fillRenderer.enabled = displayedFillRatio > 0.001f;
+        }
+
+        private void UpdateFillColor(int count)
+        {
+            if (greenFillSprite == null) greenFillSprite = fillRenderer.sprite;
+            if (count == 0)
+            {
+                fillRenderer.sprite = greenFillSprite;
+                fillRenderer.color = baseFillColor;
+                transitionTarget = null;
+                if (transitionRenderer != null) transitionRenderer.enabled = false;
+                return;
+            }
+
+            Sprite target = count <= 15 ? greenFillSprite
+                : count <= 25 ? orangeFillSprite
+                : redFillSprite;
+            if (target == null || transitionTarget == target) return;
+            if (fillRenderer.sprite == target)
+            {
+                if (transitionRenderer != null && transitionRenderer.enabled)
+                {
+                    transitionRenderer.enabled = false;
+                    fillRenderer.color = baseFillColor;
+                    transitionTarget = null;
+                }
+                return;
+            }
+
+            EnsureTransitionRenderer();
+            transitionTarget = target;
+            transitionElapsed = 0f;
+            transitionRenderer.sprite = target;
+            transitionRenderer.enabled = true;
+            transitionRenderer.color = new Color(baseFillColor.r, baseFillColor.g,
+                baseFillColor.b, 0f);
+            fillRenderer.color = baseFillColor;
+        }
+
+        private void EnsureTransitionRenderer()
+        {
+            if (transitionRenderer != null) return;
+            GameObject overlay = new("Fill Color Transition");
+            overlay.transform.SetParent(fillRenderer.transform.parent, false);
+            overlay.transform.SetSiblingIndex(fillRenderer.transform.GetSiblingIndex() + 1);
+            transitionRenderer = overlay.AddComponent<SpriteRenderer>();
+            transitionRenderer.spriteSortPoint = fillRenderer.spriteSortPoint;
+            transitionRenderer.sortingLayerID = fillRenderer.sortingLayerID;
+            transitionRenderer.sortingOrder = fillRenderer.sortingOrder;
+            transitionRenderer.maskInteraction = fillRenderer.maskInteraction;
+            transitionRenderer.sharedMaterial = fillRenderer.sharedMaterial;
+            transitionRenderer.flipX = fillRenderer.flipX;
+            transitionRenderer.flipY = fillRenderer.flipY;
+            transitionRenderer.enabled = false;
+        }
+
+        private void AdvanceFillColorTransition(float deltaTime)
+        {
+            if (transitionRenderer == null || !transitionRenderer.enabled) return;
+            transitionElapsed += deltaTime;
+            float progress = Mathf.Clamp01(transitionElapsed / FillColorTransitionDuration);
+            progress = Mathf.SmoothStep(0f, 1f, progress);
+            fillRenderer.color = new Color(baseFillColor.r, baseFillColor.g,
+                baseFillColor.b, 1f - progress);
+            transitionRenderer.color = new Color(baseFillColor.r, baseFillColor.g,
+                baseFillColor.b, progress);
+            SyncTransitionTransform();
+            if (progress < 1f) return;
+
+            fillRenderer.sprite = transitionTarget;
+            fillRenderer.color = baseFillColor;
+            transitionRenderer.enabled = false;
+            transitionTarget = null;
+        }
+
+        private void SyncTransitionTransform()
+        {
+            if (transitionRenderer == null) return;
+            Transform source = fillRenderer.transform;
+            Transform overlay = transitionRenderer.transform;
+            overlay.localPosition = source.localPosition;
+            overlay.localRotation = source.localRotation;
+            overlay.localScale = source.localScale;
         }
 
         private void PrepareRoundedFill()

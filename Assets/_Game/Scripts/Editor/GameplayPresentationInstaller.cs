@@ -44,6 +44,8 @@ namespace BubbleFruitLoop.Editor
             Sprite backgroundSprite = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "bg.png");
             Sprite frameSprite = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "bgfill-removebg-preview.png");
             Sprite fillSprite = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "fill-removebg-preview.png");
+            Sprite orangeFillSprite = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "fillorange-removebg-preview.png");
+            Sprite redFillSprite = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "fillred-removebg-preview.png");
             if (backgroundSprite == null || frameSprite == null || fillSprite == null) return;
 
             Transform background = board.transform.Find("Gameplay Background");
@@ -111,7 +113,7 @@ namespace BubbleFruitLoop.Editor
                 changed = true;
             }
             display.Configure(frameRenderer, fillRenderer, label,
-                Object.FindFirstObjectByType<EditableFruitLoopController>());
+                Object.FindFirstObjectByType<EditableFruitLoopController>(), orangeFillSprite, redFillSprite);
             display.AlignInsideLoopBoundary();
 
             LowerBoxLayout(boardBounds);

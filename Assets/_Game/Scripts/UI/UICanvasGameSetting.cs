@@ -14,6 +14,8 @@ namespace BubbleFruitLoop.UI
         private SettingToggle musicToggle;
         private SettingToggle soundToggle;
         private SettingToggle vibrationToggle;
+        private UICanvasGameplay gameplayCanvas;
+        private bool gameplayWasActive;
 
         public override void OnInit()
         {
@@ -28,8 +30,23 @@ namespace BubbleFruitLoop.UI
 
         public override void OnOpen(object data)
         {
+            gameplayCanvas = FindFirstObjectByType<UICanvasGameplay>(FindObjectsInactive.Include);
+            if (gameplayCanvas != null)
+            {
+                gameplayWasActive = gameplayCanvas.gameObject.activeSelf;
+                gameplayCanvas.gameObject.SetActive(false);
+            }
             base.OnOpen(data);
             RefreshFromData();
+        }
+
+        public override void OnClose()
+        {
+            base.OnClose();
+            if (gameplayCanvas != null && gameplayWasActive)
+                gameplayCanvas.gameObject.SetActive(true);
+            gameplayCanvas = null;
+            gameplayWasActive = false;
         }
 
         private void RefreshFromData()

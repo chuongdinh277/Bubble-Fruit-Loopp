@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using UnityEditor;
 using BubbleFruitLoop.Gameplay;
 using TMPro;
 using UnityEngine;
@@ -133,7 +134,9 @@ namespace BubbleFruitLoop.Editor
             label.color = new Color(0.12f, 0.12f, 0.16f, 1f);
 
             LoopProgressDisplay display = root.gameObject.AddComponent<LoopProgressDisplay>();
-            display.Configure(frame, fill, label);
+            display.Configure(frame, fill, label, null,
+                AssetDatabase.LoadAssetAtPath<Sprite>("Assets/_Game/Texture/Gameplay/fillorange-removebg-preview.png"),
+                AssetDatabase.LoadAssetAtPath<Sprite>("Assets/_Game/Texture/Gameplay/fillred-removebg-preview.png"));
         }
 
         private void CreateSupportPegs(Transform parent)

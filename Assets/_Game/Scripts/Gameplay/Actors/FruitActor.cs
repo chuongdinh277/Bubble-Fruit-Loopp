@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using BubbleFruitLoop.Pooling;
 using UnityEngine;
 
 namespace BubbleFruitLoop.Gameplay
 {
-    public sealed class FruitActor : MonoBehaviour, IPoolable
+    public sealed partial class FruitActor : MonoBehaviour, IPoolable
     {
         private Transform cachedTransform;
         [SerializeField] private Rigidbody2D body;
@@ -32,8 +32,8 @@ namespace BubbleFruitLoop.Gameplay
             get
             {
                 // Always return the per-instance sprite, not the static catalog.
-                // The catalog maps typeâ†’sprite globally, so it returns the LAST sprite
-                // assigned to any fruit of that type â€” wrong when pool reuses actors.
+                // The catalog maps type→sprite globally, so it returns the LAST sprite
+                // assigned to any fruit of that type — wrong when pool reuses actors.
                 if (configuredSprite != null) return configuredSprite;
                 SpriteRenderer sr = visualRenderer as SpriteRenderer;
                 if (sr == null) sr = GetComponentInChildren<SpriteRenderer>(true);
@@ -89,12 +89,18 @@ namespace BubbleFruitLoop.Gameplay
         public void SetState(FruitState nextState)
         {
             state = nextState;
+            ConfigureStatePhysics(nextState);
+            ConfigureStateCollider(nextState);
+        }
+
+        // Select whether the actor participates in the physics simulation.
+        private void ConfigureStatePhysics(FruitState nextState)
+        {
             bool usesPhysics = nextState is FruitState.Released or FruitState.Jammed or FruitState.IntakeWaiting
                 or FruitState.EnteringLoop or FruitState.Transient or FruitState.StableOnLoop
                 or FruitState.EntryCongestion or FruitState.Admitted or FruitState.MergingToLane
                 or FruitState.OnLoop or FruitState.WaitingFull;
             body.simulated = usesPhysics;
-            bodyCollider.enabled = nextState != FruitState.Pooled;
             if (nextState == FruitState.InsideBubble)
             {
                 body.bodyType = RigidbodyType2D.Kinematic;
@@ -111,115 +117,37 @@ namespace BubbleFruitLoop.Gameplay
             }
         }
 
-        public void Release(Vector2 inheritedVelocity)
+        // Keep pooled fruit colliders disabled while retaining other state behavior.
+        private void ConfigureStateCollider(FruitState nextState)
         {
-            CachedTransform.SetParent(null, true);
-            SetState(FruitState.Released);
-            body.bodyType = RigidbodyType2D.Dynamic;
-            body.freezeRotation = false;
-            body.gravityScale = 1f;
-            body.linearDamping = 1.2f;
-            body.interpolation = RigidbodyInterpolation2D.Interpolate;
-            body.linearVelocity = inheritedVelocity;
-
-            // Fruits inside bubbles ignore every outer shell while contained. Restore
-            // those contacts on release so falling fruit can land on and press the
-            // remaining bubbles instead of passing straight through them.
-            BubbleActor[] bubbles = FindObjectsByType<BubbleActor>(FindObjectsSortMode.None);
-            for (int index = 0; index < bubbles.Length; index++)
-                bubbles[index].EnableCollisionWithReleasedFruit(bodyCollider);
-        }
-
-        public void BeginStableMotion(float distance)
-        {
-            pathDistance = distance;
-            SetState(FruitState.StableOnLoop);
-        }
-
-        public void BeginPhysicalLoopMotion(float distance)
-        {
-            pathDistance = distance;
-            state = FruitState.StableOnLoop;
-            body.simulated = true;
-            body.bodyType = RigidbodyType2D.Dynamic;
-            body.gravityScale = 0f;
-            body.linearDamping = 0.4f;
-            body.angularDamping = 2.5f;
-            body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-            body.interpolation = RigidbodyInterpolation2D.Interpolate;
-        }
-
-        public void EnterCongestion(bool loopIsFull)
-        {
-            state = loopIsFull ? FruitState.WaitingFull : FruitState.EntryCongestion;
-            body.simulated = true;
-            body.bodyType = RigidbodyType2D.Dynamic;
-            // Entry motion is velocity-controlled below. A little gravity keeps
-            // contact with the sloped chute without making each collision produce a
-            // visibly different falling speed.
-            body.gravityScale = loopIsFull ? 1f : 0.22f;
-            body.linearDamping = loopIsFull ? 1.2f : 0.35f;
-            body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-            body.interpolation = RigidbodyInterpolation2D.Interpolate;
-        }
-
-        public void BeginLaneCapture(float distance)
-        {
-            pathDistance = distance;
-            state = FruitState.MergingToLane;
-            body.simulated = true;
-            body.bodyType = RigidbodyType2D.Dynamic;
-            body.gravityScale = 1f;
-            body.linearDamping = 0.7f;
-            body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-            body.interpolation = RigidbodyInterpolation2D.Interpolate;
-        }
-
-        public void BlendIntoLane(Vector2 target, Vector2 tangent, float progress, float loopSpeed,
-            float attraction, float tangentSteering, float maxSpeed)
-        {
-            if (!body.simulated || body.bodyType != RigidbodyType2D.Dynamic) return;
-            float pathWeight = Mathf.SmoothStep(0f, 1f, progress);
-            body.gravityScale = Mathf.Lerp(1f, 0f, pathWeight);
-            Vector2 attractionForce = (target - body.position) * (attraction * pathWeight);
-            Vector2 tangentVelocity = tangent.normalized * loopSpeed;
-            Vector2 steeringForce = (tangentVelocity - body.linearVelocity) * (tangentSteering * pathWeight);
-            body.AddForce(Vector2.ClampMagnitude(attractionForce + steeringForce, 18f), ForceMode2D.Force);
-            body.linearVelocity = Vector2.ClampMagnitude(body.linearVelocity, maxSpeed);
-        }
-
-        public void CompleteLaneCapture(float distance, Vector2 entryVelocity)
-        {
-            pathDistance = distance;
-            state = FruitState.OnLoop;
-            body.simulated = true;
-            body.bodyType = RigidbodyType2D.Kinematic;
-            body.gravityScale = 0f;
-            body.linearDamping = 1f;
-            body.angularDamping = 2f;
-            body.freezeRotation = true;
-            body.linearVelocity = Vector2.zero;
-            body.angularVelocity = 0f;
-            body.interpolation = RigidbodyInterpolation2D.Interpolate;
-        }
-
-        public void DisablePhysics()
-        {
-            body.simulated = false;
-            body.linearVelocity = Vector2.zero;
-            body.angularVelocity = 0f;
+            bodyCollider.enabled = nextState != FruitState.Pooled;
         }
 
         public void PrepareForBoxSlot(float targetDiameter, int sortingOrder)
         {
             DisablePhysics();
-            if (bodyCollider != null) bodyCollider.enabled = false;
-            if (visualRenderer != null)
-            {
-                visualRenderer.enabled = true;
-                visualRenderer.sortingOrder = sortingOrder;
-            }
+            DisableSlotCollider();
+            ConfigureSlotRenderer(sortingOrder);
+            ResizeForSlot(targetDiameter);
+        }
 
+        // Hide collision while the fruit is displayed inside a box.
+        private void DisableSlotCollider()
+        {
+            if (bodyCollider != null) bodyCollider.enabled = false;
+        }
+
+        // Preserve the actor artwork and place it above the box body.
+        private void ConfigureSlotRenderer(int sortingOrder)
+        {
+            if (visualRenderer == null) return;
+            visualRenderer.enabled = true;
+            visualRenderer.sortingOrder = sortingOrder;
+        }
+
+        // Fit the fruit artwork to the authored box slot diameter.
+        private void ResizeForSlot(float targetDiameter)
+        {
             if (targetDiameter > 0f && visualRenderer is SpriteRenderer spriteRenderer && spriteRenderer.sprite != null)
             {
                 Vector2 spriteSize = spriteRenderer.sprite.bounds.size;
@@ -287,11 +215,23 @@ namespace BubbleFruitLoop.Gameplay
         {
             if (!body.simulated || body.bodyType != RigidbodyType2D.Dynamic) return;
 
+            Vector2 flowDirection = GetEntryFlowDirection(target, lateralSteering);
+            ApplyEntryFlowVelocity(flowDirection, response, targetSpeed);
+        }
+
+        // Bias horizontal steering while preserving a mostly vertical chute flow.
+        private Vector2 GetEntryFlowDirection(Vector2 target, float lateralSteering)
+        {
             Vector2 offset = target - body.position;
             Vector2 flowDirection = new(offset.x * lateralSteering, offset.y);
             if (flowDirection.sqrMagnitude < 0.0001f) flowDirection = Vector2.down;
             flowDirection.Normalize();
+            return flowDirection;
+        }
 
+        // Smoothly converge toward the requested entry speed.
+        private void ApplyEntryFlowVelocity(Vector2 flowDirection, float response, float targetSpeed)
+        {
             // Direct velocity convergence makes all fruit descend at almost the same
             // pace, while MoveTowards still leaves enough softness for wall contacts.
             Vector2 desiredVelocity = flowDirection * targetSpeed;
@@ -306,6 +246,14 @@ namespace BubbleFruitLoop.Gameplay
         {
             if (!body.simulated || body.bodyType != RigidbodyType2D.Dynamic) return;
             Vector2 pathDirection = tangent.normalized;
+            MaintainPathForwardVelocity(pathDirection, targetSpeed);
+            ApplyPathCentering(target, centeringStrength);
+            ClampPathVelocity(targetSpeed, maxSpeed);
+        }
+
+        // Keep the fruit moving forward while retaining limited sideways contact motion.
+        private void MaintainPathForwardVelocity(Vector2 pathDirection, float targetSpeed)
+        {
             float currentForwardSpeed = Vector2.Dot(body.linearVelocity, pathDirection);
             float forwardSpeed = Mathf.MoveTowards(currentForwardSpeed, targetSpeed, 12f * Time.fixedDeltaTime);
 
@@ -314,10 +262,18 @@ namespace BubbleFruitLoop.Gameplay
             Vector2 sidewaysVelocity = body.linearVelocity - pathDirection * currentForwardSpeed;
             sidewaysVelocity = Vector2.ClampMagnitude(sidewaysVelocity, 0.45f);
             body.linearVelocity = pathDirection * forwardSpeed + sidewaysVelocity;
+        }
 
+        // Pull the actor toward the authored path center.
+        private void ApplyPathCentering(Vector2 target, float centeringStrength)
+        {
             Vector2 centeringForce = Vector2.ClampMagnitude(target - body.position, 0.3f) * centeringStrength;
             body.AddForce(Vector2.ClampMagnitude(centeringForce, 18f), ForceMode2D.Force);
+        }
 
+        // Prevent collision response from exceeding the movement speed limit.
+        private void ClampPathVelocity(float targetSpeed, float maxSpeed)
+        {
             float effectiveSpeedLimit = Mathf.Max(maxSpeed, targetSpeed * 1.35f);
             body.linearVelocity = Vector2.ClampMagnitude(body.linearVelocity, effectiveSpeedLimit);
         }

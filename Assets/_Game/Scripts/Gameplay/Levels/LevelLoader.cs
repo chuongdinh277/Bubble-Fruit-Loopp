@@ -34,9 +34,9 @@ namespace BubbleFruitLoop.Gameplay
 
         private void SelectCurrentTestLevel()
         {
-            int levelNumber = DataManager.Instance != null ? DataManager.Instance.GetLevel() : 1;
-            levelNumber = levelNumber == 2 ? 2 : 1;
-            LevelData selected = Resources.Load<LevelData>($"Levels/Level_{levelNumber:00}");
+            int levelNumber = Mathf.Max(1, DataManager.Instance != null ? DataManager.Instance.GetLevel() : 1);
+            int mapNumber = (levelNumber - 1) % 5 + 1;
+            LevelData selected = Resources.Load<LevelData>($"Levels/Level_{mapNumber:00}");
             if (selected != null) currentLevel = selected;
         }
 

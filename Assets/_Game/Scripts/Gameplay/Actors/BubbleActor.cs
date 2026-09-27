@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using BubbleFruitLoop.Pooling;
 using UnityEngine;
@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace BubbleFruitLoop.Gameplay
 {
-    public sealed class BubbleActor : MonoBehaviour, IPoolable
+    public sealed partial class BubbleActor : MonoBehaviour, IPoolable
     {
         [SerializeField] private List<FruitActor> fruits = new(8);
         [SerializeField] private Rigidbody2D physicsBody;
@@ -16,6 +16,7 @@ namespace BubbleFruitLoop.Gameplay
         [SerializeField] private Transform visualRoot;
         [SerializeField] private Renderer[] visualRenderers;
         [SerializeField] private BubbleFruitMotion fruitMotion;
+        private BubbleDeformMesh[] deformMeshes;
         
         [Header("Jiggle Physics")]
         [SerializeField, Min(0f)] private float springStiffness = 30f;
@@ -51,51 +52,6 @@ namespace BubbleFruitLoop.Gameplay
 
         public bool IsPopped => popped;
         public Collider2D ObstacleCollider => outerCollider != null ? outerCollider : innerBoundary;
-
-        private void Start()
-        {
-            // Stable per-bubble offset keeps the board moving organically instead of
-            // making every bubble sway in exactly the same direction at once.
-            idlePhase = Mathf.Repeat(transform.position.x * 0.83f + transform.position.y * 1.37f, Mathf.PI * 2f);
-
-            // The bubbles should drift through a viscous medium, not rebound like
-            // rubber balls. Apply a safe floor here so older serialized scenes also
-            // receive the softer motion without needing to be rebuilt.
-            if (physicsBody != null)
-            {
-                physicsBody.linearDamping = Mathf.Max(physicsBody.linearDamping, 0.85f);
-                physicsBody.angularDamping = Mathf.Max(physicsBody.angularDamping, 1.2f);
-            }
-
-            if (visualRoot == null && visualRenderers != null && visualRenderers.Length > 0 && visualRenderers[0] != null)
-            {
-                // Fallback: If no visual root assigned, but we have multiple renderers under a parent, use the parent
-                if (visualRenderers.Length > 1 && visualRenderers[0].transform.parent != transform)
-                    visualRoot = visualRenderers[0].transform.parent;
-                else
-                    visualRoot = visualRenderers[0].transform;
-            }
-
-            if (visualRoot != null)
-            {
-                originalVisualScale = visualRoot.localScale;
-            }
-            
-            popped = false;
-            if (fruits.Count == 0)
-            {
-                fruits.AddRange(GetComponentsInChildren<FruitActor>(true));
-            }
-
-            if (!popped && fruitMotion != null) fruitMotion.StartMotion();
-            
-            if (innerBoundary is EdgeCollider2D edge && edge.edgeRadius < 0.05f)
-            {
-                edge.edgeRadius = 0.1f;
-            }
-
-            IsolateFromOtherFruits();
-        }
 
         private void IsolateFromOtherFruits()
         {
@@ -177,121 +133,10 @@ namespace BubbleFruitLoop.Gameplay
             StartCoroutine(PlayPopEffect());
         }
 
-        private IEnumerator PlayPopEffect()
-        {
-            Vector3 startScale = visualRoot != null ? visualRoot.localScale : Vector3.one;
-            yield return AnimateVisualScale(startScale, startScale * popAnticipationScale, popAnticipationDuration);
-            yield return AnimateVisualScale(
-                visualRoot != null ? visualRoot.localScale : startScale,
-                startScale * popBurstScale,
-                popBurstDuration);
-
-            SpawnPopBubbles();
-            SetVisualsEnabled(false);
-
-            Vector2 inheritedVelocity = physicsBody != null ? physicsBody.linearVelocity : Vector2.zero;
-            Vector2 burstCenter = transform.position;
-            for (int index = 0; index < fruits.Count; index++)
-            {
-                FruitActor fruit = fruits[index];
-                if (fruit == null) continue;
-                Vector2 radial = (Vector2)fruit.CachedTransform.position - burstCenter;
-                if (radial.sqrMagnitude < 0.0025f)
-                {
-                    float fallbackAngle = (index + 0.5f) / Mathf.Max(1, fruits.Count) * Mathf.PI * 2f;
-                    radial = new Vector2(Mathf.Cos(fallbackAngle), Mathf.Sin(fallbackAngle));
-                }
-                radial.Normalize();
-
-                // A short outward puff separates the fruit silhouettes before
-                // gravity takes over. A small lift keeps it readable as a burst,
-                // while the capped force prevents fruit escaping the chute.
-                float force = Random.Range(
-                    Mathf.Min(fruitBurstForceMin, fruitBurstForceMax),
-                    Mathf.Max(fruitBurstForceMin, fruitBurstForceMax));
-                Vector2 sidewaysVariation = new(-radial.y, radial.x);
-                Vector2 burstVelocity = radial * force
-                    + Vector2.up * fruitBurstLift
-                    + sidewaysVariation * Random.Range(-0.18f, 0.18f);
-                fruit.Release(inheritedVelocity + burstVelocity);
-            }
-            fruits.Clear();
-        }
-
-        private IEnumerator AnimateVisualScale(Vector3 from, Vector3 to, float duration)
-        {
-            if (visualRoot == null) yield break;
-            float elapsed = 0f;
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float progress = Mathf.Clamp01(elapsed / duration);
-                progress = progress * progress * (3f - 2f * progress);
-                visualRoot.localScale = Vector3.LerpUnclamped(from, to, progress);
-                yield return null;
-            }
-            visualRoot.localScale = to;
-        }
-
-        private void SpawnPopBubbles()
-        {
-            GameObject effect = new($"{name}_PopBubbles");
-            effect.transform.position = transform.position;
-
-            ParticleSystem particles = effect.AddComponent<ParticleSystem>();
-            particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            ParticleSystem.MainModule main = particles.main;
-            main.loop = false;
-            main.duration = 0.25f;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(0.45f, 0.85f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(0.8f, 1.75f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.12f, 0.3f);
-            main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
-            main.gravityModifier = -0.08f;
-            main.simulationSpace = ParticleSystemSimulationSpace.World;
-            main.maxParticles = Mathf.Max(20, popBubbleCount);
-
-            ParticleSystem.EmissionModule emission = particles.emission;
-            emission.rateOverTime = 0f;
-            emission.SetBursts(new[]
-            {
-                new ParticleSystem.Burst(0f, (short)popBubbleCount)
-            });
-
-            ParticleSystem.ShapeModule shape = particles.shape;
-            shape.shapeType = ParticleSystemShapeType.Circle;
-            shape.radius = 0.65f;
-            shape.radiusThickness = 1f;
-
-            ParticleSystem.SizeOverLifetimeModule size = particles.sizeOverLifetime;
-            size.enabled = true;
-            size.size = new ParticleSystem.MinMaxCurve(1f,
-                new AnimationCurve(
-                    new Keyframe(0f, 0.35f),
-                    new Keyframe(0.18f, 1f),
-                    new Keyframe(0.72f, 0.8f),
-                    new Keyframe(1f, 0f)));
-
-            ParticleSystem.ColorOverLifetimeModule color = particles.colorOverLifetime;
-            color.enabled = true;
-            Gradient fade = new();
-            fade.SetKeys(
-                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(0.75f, 0.92f, 1f), 1f) },
-                new[] { new GradientAlphaKey(0.9f, 0f), new GradientAlphaKey(0.65f, 0.65f), new GradientAlphaKey(0f, 1f) });
-            color.color = fade;
-
-            ParticleSystemRenderer particleRenderer = particles.GetComponent<ParticleSystemRenderer>();
-            if (visualRenderers != null && visualRenderers.Length > 0 && visualRenderers[^1] != null)
-                particleRenderer.sharedMaterial = visualRenderers[^1].sharedMaterial;
-            particleRenderer.sortingOrder = 25;
-
-            particles.Play();
-            Destroy(effect, 1.5f);
-        }
-
         public void OnSpawned()
         {
             popped = false;
+            ResetBottomSupport();
             currentSquash = 0f;
             squashVelocity = 0f;
             if (visualRoot != null && visualRoot != transform)
@@ -308,6 +153,7 @@ namespace BubbleFruitLoop.Gameplay
 
         public void OnDespawned()
         {
+            ResetBottomSupport();
             fruits.Clear();
             popped = true;
         }
@@ -342,6 +188,8 @@ namespace BubbleFruitLoop.Gameplay
 
             physicsBody.AddForce(idleForce, ForceMode2D.Force);
             physicsBody.AddTorque(Mathf.Sin(time * 0.73f + 1.1f) * idleTorque, ForceMode2D.Force);
+            SlowFallNearSupport();
+            lastDownwardSpeed = Mathf.Max(0f, -physicsBody.linearVelocity.y);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
@@ -352,11 +200,22 @@ namespace BubbleFruitLoop.Gameplay
 
             // Bubble-to-bubble contact always gets a tiny readable response, even when
             // the bodies are only slowly pressing against one another.
-            float softImpactMultiplier = Mathf.Clamp(impactMultiplier, 0f, 0.04f);
+            float softImpactMultiplier = Mathf.Clamp(impactMultiplier, 0f, 0.015f);
             float contactResponse = impact * softImpactMultiplier;
-            if (hitBubble) contactResponse += Mathf.Clamp(bubbleContactKick, 0f, 0.11f);
+            if (hitBubble) contactResponse += Mathf.Clamp(bubbleContactKick, 0f, 0.035f);
             squashVelocity -= contactResponse;
+            HandleBubbleImpact(collision);
 
+        }
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            UpdateBottomSupport(collision);
+        }
+
+        private void OnCollisionExit2D(Collision2D collision)
+        {
+            RemoveBottomSupport(collision);
         }
 
         private void UpdateJiggle()
@@ -365,17 +224,29 @@ namespace BubbleFruitLoop.Gameplay
 
             // Clamp legacy Inspector values: older scenes stored a stiffness of 150,
             // which produces a rubber-ball snap instead of a soft bubble response.
-            float softStiffness = Mathf.Clamp(springStiffness, 18f, 35f);
-            float softDamping = Mathf.Clamp(damping, 8f, 12f);
+            float softStiffness = Mathf.Clamp(springStiffness, 8f, 14f);
+            float softDamping = Mathf.Clamp(damping, 12f, 18f);
+            UpdateSquashMotion(softStiffness, softDamping);
+            ApplySquashScale();
+        }
+
+        // Integrate the damped spring and constrain legacy tuning values.
+        private void UpdateSquashMotion(float softStiffness, float softDamping)
+        {
             float springForce = -softStiffness * currentSquash;
             float dampingForce = -softDamping * squashVelocity;
             squashVelocity += (springForce + dampingForce) * Time.deltaTime;
             currentSquash += squashVelocity * Time.deltaTime;
             // Old scene/prefab data may still contain the former 0.45 value. Keep the
             // runtime cap conservative so existing assets cannot become heavily oval.
-            float safeMaxDeformation = Mathf.Clamp(maxDeformation, 0f, 0.08f);
+            float safeMaxDeformation = Mathf.Clamp(maxDeformation, 0f, 0.035f);
             currentSquash = Mathf.Clamp(currentSquash, -safeMaxDeformation, safeMaxDeformation);
 
+        }
+
+        // Apply the current squash to the visual child without scaling colliders.
+        private void ApplySquashScale()
+        {
             float scaleY = 1f + currentSquash;
             float scaleX = 1f - currentSquash * 0.85f; 
             

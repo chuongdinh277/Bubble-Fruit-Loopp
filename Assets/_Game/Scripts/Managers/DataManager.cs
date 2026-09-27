@@ -29,8 +29,6 @@ namespace BubbleFruitLoop.Managers
             }
             
             data.Validate();
-            // Prototype currently cycles only the two authored test levels.
-            data.level = data.level == 2 ? 2 : 1;
             SaveData();
         }
 

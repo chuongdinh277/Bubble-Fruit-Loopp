@@ -757,7 +757,7 @@ MonoBehaviour:
   orbitStrength: 0.42
   driftStrength: 0.16
   maxSpeed: 0.85
-  tickInterval: 0.04
+  containmentRadius: 1.6
   direction: 1
   seed: 13.7
 --- !u!114 &8002406641307014584
@@ -784,10 +784,30 @@ MonoBehaviour:
   physicsBody: {fileID: 8618372532809905188}
   outerCollider: {fileID: 4319369759755106964}
   innerBoundary: {fileID: 3129830166520861610}
+  visualRoot: {fileID: 0}
   visualRenderers:
   - {fileID: 1021810343190104277}
   - {fileID: 7426482884906643677}
   fruitMotion: {fileID: 506075629027049308}
+  springStiffness: 30
+  damping: 9
+  impactMultiplier: 0.025
+  bubbleContactKick: 0.1
+  maxDeformation: 0.08
+  idleHorizontalForce: 0.14
+  idleVerticalForce: 0.04
+  idleFrequency: 0.9
+  idleTorque: 0.008
+  idleBuoyancy: 0.72
+  idleBuoyancyPulse: 0.38
+  popAnticipationDuration: 0.075
+  popAnticipationScale: 0.84
+  popBurstDuration: 0.045
+  popBurstScale: 1.06
+  popBubbleCount: 11
+  fruitBurstForceMin: 1.05
+  fruitBurstForceMax: 1.75
+  fruitBurstLift: 0.55
 --- !u!1 &2754755397287694592
 GameObject:
   m_ObjectHideFlags: 0
@@ -1574,7 +1594,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1452449664378369357
 Transform:
   m_ObjectHideFlags: 0
@@ -1605,7 +1625,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6082077226562728063}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
