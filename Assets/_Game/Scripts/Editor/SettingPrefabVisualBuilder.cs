@@ -13,13 +13,12 @@ namespace BubbleFruitLoop.Editor
     {
         private const string PrefabPath = "Assets/_Game/Resources/UI/UICanvasGameSetting.prefab";
         private const string TextureRoot = "Assets/_Game/Texture/Gameplay/";
-
         static SettingPrefabVisualBuilder() => EditorApplication.delayCall += BakeMissingVisuals;
-
         [MenuItem("BubbleFruit/Bake Editable Setting Toggles")]
         public static void BakeMissingVisuals()
         {
-            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                return;
             PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
             if (stage != null && stage.assetPath == PrefabPath)
             {
@@ -30,14 +29,17 @@ namespace BubbleFruitLoop.Editor
                     SceneView.RepaintAll();
                     Debug.Log("Editable Setting toggle visuals baked into the open prefab.");
                 }
+
                 return;
             }
 
             GameObject root = PrefabUtility.LoadPrefabContents(PrefabPath);
-            if (root == null) return;
+            if (root == null)
+                return;
             try
             {
-                if (!Bake(root)) return;
+                if (!Bake(root))
+                    return;
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
                 AssetDatabase.SaveAssets();
                 Debug.Log("Editable Setting toggle visuals baked into UICanvasGameSetting.prefab.");
@@ -52,21 +54,28 @@ namespace BubbleFruitLoop.Editor
         {
             Sprite bar = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "fill-removebg-preview.png");
             Sprite fruit = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "icnf-removebg-preview.png");
-            if (bar == null || fruit == null) return false;
-
+            if (bar == null || fruit == null)
+                return false;
             // Also repair an already-open Prefab Stage. It can retain the three
             // invalid SettingToggle components in memory even after the asset YAML
             // was fixed, which otherwise keeps Auto Save permanently blocked.
             bool changed = RemoveMissingScriptsRecursive(root.transform) > 0;
-            string[] rows = { "IconSound", "IconMusic", "IconPhone" };
+            string[] rows =
+            {
+                "IconSound",
+                "IconMusic",
+                "IconPhone"
+            };
             for (int index = 0; index < rows.Length; index++)
             {
                 Transform row = FindChild(root.transform, rows[index]);
                 Button button = row != null ? row.GetComponentInChildren<Button>(true) : null;
-                if (button == null || button.transform.Find("SwitchVisual") != null) continue;
+                if (button == null || button.transform.Find("SwitchVisual") != null)
+                    continue;
                 BakeToggle(button, bar, fruit);
                 changed = true;
             }
+
             return changed;
         }
 
@@ -84,11 +93,29 @@ namespace BubbleFruitLoop.Editor
         {
             RectTransform buttonRect = (RectTransform)button.transform;
             buttonRect.sizeDelta = new Vector2(410f, 104f);
+            ConfigureToggleImages(button, bar, fruit);
+            ConfigureToggleLabel(button);
+        }
+
+        private static Transform FindChild(Transform root, string objectName)
+        {
+            if (root.name == objectName)
+                return root;
+            for (int index = 0; index < root.childCount; index++)
+            {
+                Transform result = FindChild(root.GetChild(index), objectName);
+                if (result != null)
+                    return result;
+            }
+
+            return null;
+        }
+
+        private static void ConfigureToggleImages(Button button, Sprite bar, Sprite fruit)
+        {
             Image hitArea = button.GetComponent<Image>();
             hitArea.color = new Color(1f, 1f, 1f, 0.001f);
-
-            GameObject visualObject = new("SwitchVisual", typeof(RectTransform),
-                typeof(CanvasRenderer), typeof(Image));
+            GameObject visualObject = new("SwitchVisual", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             RectTransform visual = (RectTransform)visualObject.transform;
             visual.SetParent(button.transform, false);
             visual.anchorMin = visual.anchorMax = new Vector2(0.5f, 0.5f);
@@ -99,9 +126,7 @@ namespace BubbleFruitLoop.Editor
             barImage.type = Image.Type.Simple;
             barImage.preserveAspect = false;
             barImage.raycastTarget = false;
-
-            GameObject knobObject = new("FruitKnob", typeof(RectTransform),
-                typeof(CanvasRenderer), typeof(Image));
+            GameObject knobObject = new("FruitKnob", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             RectTransform knob = (RectTransform)knobObject.transform;
             knob.SetParent(visual, false);
             knob.anchorMin = knob.anchorMax = new Vector2(0.5f, 0.5f);
@@ -111,7 +136,10 @@ namespace BubbleFruitLoop.Editor
             knobImage.sprite = fruit;
             knobImage.preserveAspect = true;
             knobImage.raycastTarget = false;
+        }
 
+        private static void ConfigureToggleLabel(Button button)
+        {
             TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
             if (label != null)
             {
@@ -134,17 +162,6 @@ namespace BubbleFruitLoop.Editor
             }
 
             EditorUtility.SetDirty(button.gameObject);
-        }
-
-        private static Transform FindChild(Transform root, string objectName)
-        {
-            if (root.name == objectName) return root;
-            for (int index = 0; index < root.childCount; index++)
-            {
-                Transform result = FindChild(root.GetChild(index), objectName);
-                if (result != null) return result;
-            }
-            return null;
         }
     }
 }

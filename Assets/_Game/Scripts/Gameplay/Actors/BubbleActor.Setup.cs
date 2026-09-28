@@ -10,10 +10,15 @@ namespace BubbleFruitLoop.Gameplay
             // Stable per-bubble offset keeps the board moving organically instead of
             // making every bubble sway in exactly the same direction at once.
             idlePhase = Mathf.Repeat(transform.position.x * 0.83f + transform.position.y * 1.37f, Mathf.PI * 2f);
-
             // The bubbles should drift through a viscous medium, not rebound like
             // rubber balls. Apply a safe floor here so older serialized scenes also
             // receive the softer motion without needing to be rebuilt.
+            ConfigureBubblePhysics();
+            RestoreBubbleContents();
+        }
+
+        private void ConfigureBubblePhysics()
+        {
             if (physicsBody != null)
             {
                 // Keep the shell floaty, while making its fall responsive enough
@@ -38,16 +43,20 @@ namespace BubbleFruitLoop.Gameplay
             {
                 originalVisualScale = visualRoot.localScale;
             }
-            CacheDeformMeshes();
 
+            CacheDeformMeshes();
             popped = false;
+        }
+
+        private void RestoreBubbleContents()
+        {
             if (fruits.Count == 0)
             {
                 fruits.AddRange(GetComponentsInChildren<Fruit>(true));
             }
 
-            if (!popped && fruitMotion != null) fruitMotion.StartMotion();
-
+            if (!popped && fruitMotion != null)
+                fruitMotion.StartMotion();
             if (innerBoundary is EdgeCollider2D edge && edge.edgeRadius < 0.05f)
             {
                 edge.edgeRadius = 0.1f;
@@ -55,6 +64,5 @@ namespace BubbleFruitLoop.Gameplay
 
             IsolateFromOtherFruits();
         }
-
     }
 }

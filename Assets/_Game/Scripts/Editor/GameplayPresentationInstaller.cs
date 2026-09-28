@@ -13,9 +13,7 @@ namespace BubbleFruitLoop.Editor
     public static class GameplayPresentationInstaller
     {
         private const string TextureRoot = "Assets/_Game/Texture/Gameplay/";
-
         static GameplayPresentationInstaller() => EditorApplication.delayCall += InstallInOpenScene;
-
         [MenuItem("BubbleFruit/Repair Complete Sample Scene")]
         public static void RepairCompleteSampleScene()
         {
@@ -32,35 +30,25 @@ namespace BubbleFruitLoop.Editor
         [MenuItem("BubbleFruit/Repair Gameplay Background + Fill Bar")]
         public static void InstallInOpenScene()
         {
-            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
-            if (PrefabStageUtility.GetCurrentPrefabStage() != null) return;
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                return;
+            if (PrefabStageUtility.GetCurrentPrefabStage() != null)
+                return;
             EnsureSettingPrefabController();
             GameObject board = GameObject.Find("--- BUBBLE BOARD ---") ?? GameObject.Find("Bubble Board");
             Camera camera = Camera.main;
-            if (board == null || camera == null) return;
+            if (board == null || camera == null)
+                return;
             RepairFruitPaletteMapping();
-
             bool changed = false;
             Sprite backgroundSprite = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "bg.png");
             Sprite frameSprite = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "bgfill-removebg-preview.png");
             Sprite fillSprite = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "fill-removebg-preview.png");
             Sprite orangeFillSprite = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "fillorange-removebg-preview.png");
             Sprite redFillSprite = AssetDatabase.LoadAssetAtPath<Sprite>(TextureRoot + "fillred-removebg-preview.png");
-            if (backgroundSprite == null || frameSprite == null || fillSprite == null) return;
-
-            Transform background = board.transform.Find("Gameplay Background");
-            if (background == null)
-            {
-                background = new GameObject("Gameplay Background").transform;
-                background.SetParent(board.transform, false);
-                changed = true;
-            }
-            SpriteRenderer backgroundRenderer = GetOrAddRenderer(background.gameObject, ref changed);
-            backgroundRenderer.sprite = backgroundSprite;
-            backgroundRenderer.sortingOrder = -100;
-            background.position = new Vector3(camera.transform.position.x, camera.transform.position.y, 2f);
-            background.localScale = Vector3.one * (camera.orthographicSize * 2f / backgroundSprite.bounds.size.y);
-
+            if (backgroundSprite == null || frameSprite == null || fillSprite == null)
+                return;
+            ConfigureGameplayBackground(board, camera, ref changed, backgroundSprite);
             Transform progress = board.transform.Find("Progress Bar (Inside Board)");
             bool progressCreated = progress == null;
             if (progress == null)
@@ -69,24 +57,21 @@ namespace BubbleFruitLoop.Editor
                 progress.SetParent(board.transform, false);
                 changed = true;
             }
+
             if (GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(progress.gameObject) > 0)
             {
                 GameObjectUtility.RemoveMonoBehavioursWithMissingScript(progress.gameObject);
                 changed = true;
             }
+
             SpriteRenderer boardRenderer = board.transform.Find("BoardVisual")?.GetComponent<SpriteRenderer>();
-            if (boardRenderer == null) return;
+            if (boardRenderer == null)
+                return;
             Bounds boardBounds = boardRenderer.bounds;
             if (progressCreated)
-                progress.position = new Vector3(boardBounds.center.x,
-                    boardBounds.min.y + boardBounds.size.y * 0.125f, 0f);
-
-            SpriteRenderer frameRenderer = ConfigureLayer(progress, "Fill Frame", frameSprite,
-                boardBounds.size.x * 0.62f,
-                -8, Vector3.zero, ref changed);
-            SpriteRenderer fillRenderer = ConfigureLayer(progress, "Fill", fillSprite,
-                boardBounds.size.x * 0.55f, -7, Vector3.zero, ref changed);
-
+                progress.position = new Vector3(boardBounds.center.x, boardBounds.min.y + boardBounds.size.y * 0.125f, 0f);
+            SpriteRenderer frameRenderer = ConfigureLayer(progress, "Fill Frame", frameSprite, boardBounds.size.x * 0.62f, -8, Vector3.zero, ref changed);
+            SpriteRenderer fillRenderer = ConfigureLayer(progress, "Fill", fillSprite, boardBounds.size.x * 0.55f, -7, Vector3.zero, ref changed);
             Transform labelTransform = progress.Find("Fruit Count");
             bool labelCreated = labelTransform == null;
             if (labelTransform == null)
@@ -95,47 +80,34 @@ namespace BubbleFruitLoop.Editor
                 labelTransform.SetParent(progress, false);
                 changed = true;
             }
+
             TextMeshProUGUI label = labelTransform.GetComponent<TextMeshProUGUI>();
             if (label == null)
             {
                 TextMesh oldLabel = labelTransform.GetComponent<TextMesh>();
-                if (oldLabel != null) Object.DestroyImmediate(oldLabel);
+                if (oldLabel != null)
+                    Object.DestroyImmediate(oldLabel);
                 label = labelTransform.gameObject.AddComponent<TextMeshProUGUI>();
                 changed = true;
                 labelCreated = true;
             }
-            if (labelCreated)
-            {
-                labelTransform.localPosition = new Vector3(0f, 0f, -0.05f);
-                label.text = "0/30";
-                label.alignment = TextAlignmentOptions.Center;
-                label.fontSize = 64f;
-                label.color = new Color(0.12f, 0.12f, 0.16f, 1f);
-            }
 
+            RegisterProgressUndo(labelTransform, labelCreated, label);
             LoopProgressDisplay display = progress.GetComponent<LoopProgressDisplay>();
             if (display == null)
             {
                 display = progress.gameObject.AddComponent<LoopProgressDisplay>();
                 changed = true;
             }
-            display.Configure(frameRenderer, fillRenderer, label,
-                Object.FindFirstObjectByType<FruitLoopManager>(), orangeFillSprite, redFillSprite);
 
-            LowerBoxLayout(boardBounds);
-            RemoveRuntimeUiFromScene();
-
-            // Existing objects may only need their coordinates repaired.
-            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-            EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
-            Selection.activeGameObject = progress.gameObject;
+            ConfigureProgressDisplay(orangeFillSprite, redFillSprite, progress, boardBounds, frameRenderer, fillRenderer, label, display);
         }
 
         private static void RepairFruitPaletteMapping()
         {
             LevelManager loader = Object.FindFirstObjectByType<LevelManager>();
-            if (loader == null) return;
-
+            if (loader == null)
+                return;
             // Arrays must follow FruitType's numeric order:
             // Apple, Orange, Grape, Lemon, Strawberry.
             loader.fruitMaterials = new[]
@@ -161,10 +133,12 @@ namespace BubbleFruitLoop.Editor
         {
             const string path = "Assets/_Game/Resources/UI/UICanvasGameSetting.prefab";
             GameObject contents = PrefabUtility.LoadPrefabContents(path);
-            if (contents == null) return;
+            if (contents == null)
+                return;
             try
             {
-                if (contents.GetComponent<UICanvasGameSetting>() != null) return;
+                if (contents.GetComponent<UICanvasGameSetting>() != null)
+                    return;
                 contents.AddComponent<UICanvasGameSetting>();
                 PrefabUtility.SaveAsPrefabAsset(contents, path);
             }
@@ -176,11 +150,16 @@ namespace BubbleFruitLoop.Editor
 
         private static void RemoveRuntimeUiFromScene()
         {
-            string[] runtimeCanvasNames = { "UICanvasGameplay", "UICanvasGameSetting" };
+            string[] runtimeCanvasNames =
+            {
+                "UICanvasGameplay",
+                "UICanvasGameSetting"
+            };
             for (int index = 0; index < runtimeCanvasNames.Length; index++)
             {
                 GameObject existing = FindSceneObject(runtimeCanvasNames[index]);
-                if (existing != null) Object.DestroyImmediate(existing);
+                if (existing != null)
+                    Object.DestroyImmediate(existing);
             }
         }
 
@@ -193,8 +172,7 @@ namespace BubbleFruitLoop.Editor
             return null;
         }
 
-        private static SpriteRenderer ConfigureLayer(Transform parent, string name, Sprite sprite, float width,
-            int sortingOrder, Vector3 localPosition, ref bool changed)
+        private static SpriteRenderer ConfigureLayer(Transform parent, string name, Sprite sprite, float width, int sortingOrder, Vector3 localPosition, ref bool changed)
         {
             Transform layer = parent.Find(name);
             bool layerCreated = layer == null;
@@ -204,6 +182,7 @@ namespace BubbleFruitLoop.Editor
                 layer.SetParent(parent, false);
                 changed = true;
             }
+
             SpriteRenderer renderer = GetOrAddRenderer(layer.gameObject, ref changed);
             renderer.sprite = sprite;
             renderer.sortingOrder = sortingOrder;
@@ -212,26 +191,27 @@ namespace BubbleFruitLoop.Editor
                 layer.localPosition = localPosition;
                 layer.localScale = Vector3.one * (width / sprite.bounds.size.x);
             }
+
             return renderer;
         }
 
         private static SpriteRenderer GetOrAddRenderer(GameObject target, ref bool changed)
         {
             SpriteRenderer renderer = target.GetComponent<SpriteRenderer>();
-            if (renderer != null) return renderer;
+            if (renderer != null)
+                return renderer;
             changed = true;
             return target.AddComponent<SpriteRenderer>();
         }
 
         private static void LowerBoxLayout(Bounds boardBounds)
         {
-            GameObject boxRoot = GameObject.Find("BOX MODELS (EDIT LAYOUT)")
-                ?? GameObject.Find("BoxContainer")
-                ?? GameObject.Find("Box Board");
-            if (boxRoot == null) return;
+            GameObject boxRoot = GameObject.Find("BOX MODELS (EDIT LAYOUT)") ?? GameObject.Find("BoxContainer") ?? GameObject.Find("Box Board");
+            if (boxRoot == null)
+                return;
             BoxView[] boxes = boxRoot.GetComponentsInChildren<BoxView>(true);
-            if (boxes.Length == 0) return;
-
+            if (boxes.Length == 0)
+                return;
             float currentTop = float.NegativeInfinity;
             for (int index = 0; index < boxes.Length; index++)
             {
@@ -239,13 +219,55 @@ namespace BubbleFruitLoop.Editor
                 for (int rendererIndex = 0; rendererIndex < renderers.Length; rendererIndex++)
                     currentTop = Mathf.Max(currentTop, renderers[rendererIndex].bounds.max.y);
             }
-            if (float.IsNegativeInfinity(currentTop)) return;
 
+            if (float.IsNegativeInfinity(currentTop))
+                return;
             float desiredTop = boardBounds.min.y - 0.42f;
             float offset = desiredTop - currentTop;
-            if (Mathf.Abs(offset) < 0.01f) return;
+            if (Mathf.Abs(offset) < 0.01f)
+                return;
             for (int index = 0; index < boxes.Length; index++)
                 boxes[index].transform.position += Vector3.up * offset;
+        }
+
+        private static void ConfigureGameplayBackground(GameObject board, Camera camera, ref bool changed, Sprite backgroundSprite)
+        {
+            Transform background = board.transform.Find("Gameplay Background");
+            if (background == null)
+            {
+                background = new GameObject("Gameplay Background").transform;
+                background.SetParent(board.transform, false);
+                changed = true;
+            }
+
+            SpriteRenderer backgroundRenderer = GetOrAddRenderer(background.gameObject, ref changed);
+            backgroundRenderer.sprite = backgroundSprite;
+            backgroundRenderer.sortingOrder = -100;
+            background.position = new Vector3(camera.transform.position.x, camera.transform.position.y, 2f);
+            background.localScale = Vector3.one * (camera.orthographicSize * 2f / backgroundSprite.bounds.size.y);
+        }
+
+        private static void ConfigureProgressDisplay(Sprite orangeFillSprite, Sprite redFillSprite, Transform progress, Bounds boardBounds, SpriteRenderer frameRenderer, SpriteRenderer fillRenderer, TextMeshProUGUI label, LoopProgressDisplay display)
+        {
+            display.Configure(frameRenderer, fillRenderer, label, Object.FindFirstObjectByType<FruitLoopManager>(), orangeFillSprite, redFillSprite);
+            LowerBoxLayout(boardBounds);
+            RemoveRuntimeUiFromScene();
+            // Existing objects may only need their coordinates repaired.
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+            EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
+            Selection.activeGameObject = progress.gameObject;
+        }
+
+        private static void RegisterProgressUndo(Transform labelTransform, bool labelCreated, TextMeshProUGUI label)
+        {
+            if (labelCreated)
+            {
+                labelTransform.localPosition = new Vector3(0f, 0f, -0.05f);
+                label.text = "0/30";
+                label.alignment = TextAlignmentOptions.Center;
+                label.fontSize = 64f;
+                label.color = new Color(0.12f, 0.12f, 0.16f, 1f);
+            }
         }
     }
 }

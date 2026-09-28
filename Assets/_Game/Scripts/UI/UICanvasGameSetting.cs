@@ -10,9 +10,10 @@ namespace BubbleFruitLoop.UI
     public sealed class UICanvasGameSetting : UICanvas
     {
         [Header("Toggle artwork")]
-        [SerializeField] private Sprite toggleBarSprite;
-        [SerializeField] private Sprite toggleFruitSprite;
-
+        [SerializeField]
+        private Sprite toggleBarSprite;
+        [SerializeField]
+        private Sprite toggleFruitSprite;
         private SettingToggle musicToggle;
         private SettingToggle soundToggle;
         private SettingToggle vibrationToggle;
@@ -21,7 +22,6 @@ namespace BubbleFruitLoop.UI
         private static int activeSettingsCount;
         private static int lastCloseFrame = -1;
         private static readonly List<RaycastResult> uiHits = new();
-
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetInputBlock()
         {
@@ -31,7 +31,6 @@ namespace BubbleFruitLoop.UI
         }
 
         private void OnEnable() => activeSettingsCount++;
-
         private void OnDisable()
         {
             activeSettingsCount = Mathf.Max(0, activeSettingsCount - 1);
@@ -42,15 +41,18 @@ namespace BubbleFruitLoop.UI
         {
             // Cover the whole world while the modal is open, including its
             // transparent edges and the frame in which Close was pressed.
-            if (activeSettingsCount > 0 || lastCloseFrame == Time.frameCount) return true;
+            if (activeSettingsCount > 0 || lastCloseFrame == Time.frameCount)
+                return true;
             EventSystem events = EventSystem.current;
-            if (events == null) return false;
+            if (events == null)
+                return false;
             // Raycast this press directly; EventSystem's cached pointer state
             // may still describe the previous frame during gameplay Update.
             uiHits.Clear();
             events.RaycastAll(new PointerEventData(events) { position = screenPosition }, uiHits);
             foreach (RaycastResult hit in uiHits)
-                if (hit.module is GraphicRaycaster) return true;
+                if (hit.module is GraphicRaycaster)
+                    return true;
             return false;
         }
 
@@ -58,8 +60,8 @@ namespace BubbleFruitLoop.UI
         {
             base.OnInit();
             Button close = FindButton("BTNClose");
-            if (close != null) close.onClick.AddListener(OnClose);
-
+            if (close != null)
+                close.onClick.AddListener(OnClose);
             musicToggle = BuildToggle("IconMusic", SettingKind.Music);
             soundToggle = BuildToggle("IconSound", SettingKind.Sound);
             vibrationToggle = BuildToggle("IconPhone", SettingKind.Vibration);
@@ -73,6 +75,7 @@ namespace BubbleFruitLoop.UI
                 gameplayWasActive = gameplayCanvas.gameObject.activeSelf;
                 gameplayCanvas.gameObject.SetActive(false);
             }
+
             base.OnOpen(data);
             RefreshFromData();
         }
@@ -89,7 +92,8 @@ namespace BubbleFruitLoop.UI
         private void RefreshFromData()
         {
             DataManager manager = DataManager.Instance;
-            if (manager == null) return;
+            if (manager == null)
+                return;
             musicToggle?.SetValueWithoutSave(manager.GetMusic());
             soundToggle?.SetValueWithoutSave(manager.GetSound());
             vibrationToggle?.SetValueWithoutSave(manager.GetVibration());
@@ -100,9 +104,11 @@ namespace BubbleFruitLoop.UI
         {
             Transform row = FindChild(transform, rowName);
             Button button = row != null ? row.GetComponentInChildren<Button>(true) : null;
-            if (button == null) return null;
+            if (button == null)
+                return null;
             SettingToggle toggle = button.GetComponent<SettingToggle>();
-            if (toggle == null) toggle = button.gameObject.AddComponent<SettingToggle>();
+            if (toggle == null)
+                toggle = button.gameObject.AddComponent<SettingToggle>();
             toggle.Configure(kind, OnSettingChanged, toggleBarSprite, toggleFruitSprite);
             return toggle;
         }
@@ -110,21 +116,29 @@ namespace BubbleFruitLoop.UI
         private static void OnSettingChanged(SettingKind kind, bool value)
         {
             DataManager manager = DataManager.Instance;
-            if (manager == null) return;
+            if (manager == null)
+                return;
             switch (kind)
             {
-                case SettingKind.Music: manager.SetMusic(value); break;
-                case SettingKind.Sound: manager.SetSound(value); break;
-                case SettingKind.Vibration: manager.SetVibration(value); break;
+                case SettingKind.Music:
+                    manager.SetMusic(value);
+                    break;
+                case SettingKind.Sound:
+                    manager.SetSound(value);
+                    break;
+                case SettingKind.Vibration:
+                    manager.SetVibration(value);
+                    break;
             }
+
             ApplyAudioSettings(manager);
         }
 
         public static void ApplyAudioSettings(DataManager manager)
         {
-            if (manager == null) return;
-            AudioSource[] sources = FindObjectsByType<AudioSource>(FindObjectsInactive.Include,
-                FindObjectsSortMode.None);
+            if (manager == null)
+                return;
+            AudioSource[] sources = FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (AudioSource source in sources)
             {
                 bool music = source.loop || source.name.ToLowerInvariant().Contains("music");
@@ -140,17 +154,25 @@ namespace BubbleFruitLoop.UI
 
         private static Transform FindChild(Transform root, string objectName)
         {
-            if (root.name == objectName) return root;
+            if (root.name == objectName)
+                return root;
             for (int index = 0; index < root.childCount; index++)
             {
                 Transform found = FindChild(root.GetChild(index), objectName);
-                if (found != null) return found;
+                if (found != null)
+                    return found;
             }
+
             return null;
         }
     }
 
-    public enum SettingKind { Music, Sound, Vibration }
+    public enum SettingKind
+    {
+        Music,
+        Sound,
+        Vibration
+    }
 
     [DisallowMultipleComponent]
     public sealed class SettingToggle : MonoBehaviour
@@ -161,9 +183,7 @@ namespace BubbleFruitLoop.UI
         private Image knob;
         private TMP_Text label;
         private bool value;
-
-        public void Configure(SettingKind settingKind, System.Action<SettingKind, bool> onChanged,
-            Sprite barSprite, Sprite fruitSprite)
+        public void Configure(SettingKind settingKind, System.Action<SettingKind, bool> onChanged, Sprite barSprite, Sprite fruitSprite)
         {
             kind = settingKind;
             changed = onChanged;
@@ -192,8 +212,7 @@ namespace BubbleFruitLoop.UI
             if (existingVisual != null)
             {
                 background = existingVisual.GetComponent<Image>();
-                knob = existingVisual.Find("FruitKnob")?.GetComponent<Image>()
-                    ?? existingVisual.Find("Knob")?.GetComponent<Image>();
+                knob = existingVisual.Find("FruitKnob")?.GetComponent<Image>() ?? existingVisual.Find("Knob")?.GetComponent<Image>();
                 label = GetComponentInChildren<TMP_Text>(true);
                 return;
             }
@@ -204,6 +223,30 @@ namespace BubbleFruitLoop.UI
             hitArea.color = new Color(1f, 1f, 1f, 0.001f);
             GameObject root = new("SwitchVisual", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             Transform visual = root.transform;
+            ConfigureToggleArtwork(barSprite, visual);
+            knob.sprite = fruitSprite != null ? fruitSprite : Resources.GetBuiltinResource<Sprite>("UI/Skin/Knob.psd");
+            knob.preserveAspect = true;
+            knob.raycastTarget = false;
+            label = GetComponentInChildren<TMP_Text>(true);
+            if (label == null)
+                return;
+            ConfigureToggleText();
+        }
+
+        private void Refresh()
+        {
+            if (background != null)
+                background.color = value ? Color.white : new Color(1f, 0.42f, 0.38f, 1f);
+            if (label != null)
+                label.text = value ? "ON" : "OFF";
+            if (knob == null)
+                return;
+            knob.color = value ? Color.white : new Color(0.72f, 0.72f, 0.72f, 1f);
+            knob.rectTransform.anchoredPosition = new Vector2(value ? 166f : -166f, 0f);
+        }
+
+        private void ConfigureToggleArtwork(Sprite barSprite, Transform visual)
+        {
             visual.SetParent(transform, false);
             RectTransform rect = (RectTransform)visual;
             // The source bar PNG contains generous transparent padding above and
@@ -213,13 +256,10 @@ namespace BubbleFruitLoop.UI
             rect.anchoredPosition = Vector2.zero;
             rect.sizeDelta = new Vector2(410f, 156f);
             background = visual.GetComponent<Image>();
-            background.sprite = barSprite != null
-                ? barSprite
-                : Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
+            background.sprite = barSprite != null ? barSprite : Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
             background.type = barSprite != null ? Image.Type.Simple : Image.Type.Sliced;
             background.preserveAspect = false;
             background.raycastTarget = false;
-
             Transform knobTransform = visual.Find("Knob");
             if (knobTransform == null)
             {
@@ -227,18 +267,15 @@ namespace BubbleFruitLoop.UI
                 knobTransform = knobObject.transform;
                 knobTransform.SetParent(visual, false);
             }
+
             RectTransform knobRect = (RectTransform)knobTransform;
             knobRect.anchorMin = knobRect.anchorMax = new Vector2(0.5f, 0.5f);
             knobRect.sizeDelta = new Vector2(112f, 112f);
             knob = knobTransform.GetComponent<Image>();
-            knob.sprite = fruitSprite != null
-                ? fruitSprite
-                : Resources.GetBuiltinResource<Sprite>("UI/Skin/Knob.psd");
-            knob.preserveAspect = true;
-            knob.raycastTarget = false;
+        }
 
-            label = GetComponentInChildren<TMP_Text>(true);
-            if (label == null) return;
+        private void ConfigureToggleText()
+        {
             label.rectTransform.SetAsLastSibling();
             label.rectTransform.anchorMin = Vector2.zero;
             label.rectTransform.anchorMax = Vector2.one;
@@ -251,15 +288,6 @@ namespace BubbleFruitLoop.UI
             label.color = Color.white;
             label.outlineWidth = 0.18f;
             label.outlineColor = new Color32(71, 58, 24, 210);
-        }
-
-        private void Refresh()
-        {
-            if (background != null) background.color = value ? Color.white : new Color(1f, 0.42f, 0.38f, 1f);
-            if (label != null) label.text = value ? "ON" : "OFF";
-            if (knob == null) return;
-            knob.color = value ? Color.white : new Color(0.72f, 0.72f, 0.72f, 1f);
-            knob.rectTransform.anchoredPosition = new Vector2(value ? 166f : -166f, 0f);
         }
     }
 }

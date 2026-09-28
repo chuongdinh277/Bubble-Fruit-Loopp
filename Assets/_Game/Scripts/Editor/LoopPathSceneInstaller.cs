@@ -14,7 +14,6 @@ namespace BubbleFruitLoop.Editor
         private const string ScenePath = "Assets/Scenes/SampleScene.unity";
         private const string InstallKey = "BubbleFruitLoop.EditablePathVersion";
         private const int Version = 1;
-
         static LoopPathSceneInstaller()
         {
             if (EditorPrefs.GetInt(InstallKey, 0) < Version)
@@ -24,24 +23,48 @@ namespace BubbleFruitLoop.Editor
         [MenuItem("Tools/Bubble Fruit Loop/Create Editable Fruit Loop")]
         public static void InstallInOpenScene()
         {
-            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                return;
             Scene scene = SceneManager.GetActiveScene();
-            if (scene.path != ScenePath || Object.FindFirstObjectByType<LoopPathAuthoring>() != null) return;
-
+            if (scene.path != ScenePath || Object.FindFirstObjectByType<LoopPathAuthoring>() != null)
+                return;
             bool wasDirty = scene.isDirty;
             GameObject root = new("Fruit Loop Path (EDIT POINTS)");
+            ConfigureLoopPath(root);
+            Selection.activeGameObject = root;
+            if (!wasDirty)
+                EditorSceneManager.SaveScene(scene);
+            else
+                EditorSceneManager.MarkSceneDirty(scene);
+        }
+
+        private static void ConfigureLoopPath(GameObject root)
+        {
             LoopPathAuthoring authoring = root.AddComponent<LoopPathAuthoring>();
             FruitLoopManager controller = root.AddComponent<FruitLoopManager>();
-
             Vector2[] positions =
             {
-                new(0f, -0.5f), new(1.25f, -0.5f), new(2.5f, -0.5f), new(3.45f, -0.75f),
-                new(4.15f, -1.35f), new(4.15f, -2.15f), new(4.15f, -2.95f), new(3.45f, -3.55f),
-                new(2.5f, -3.8f), new(1.25f, -3.8f), new(0f, -3.8f), new(-1.25f, -3.8f),
-                new(-2.5f, -3.8f), new(-3.45f, -3.55f), new(-4.15f, -2.95f), new(-4.15f, -2.15f),
-                new(-4.15f, -1.35f), new(-3.45f, -0.75f), new(-2.5f, -0.5f), new(-1.25f, -0.5f)
+                new(0f, -0.5f),
+                new(1.25f, -0.5f),
+                new(2.5f, -0.5f),
+                new(3.45f, -0.75f),
+                new(4.15f, -1.35f),
+                new(4.15f, -2.15f),
+                new(4.15f, -2.95f),
+                new(3.45f, -3.55f),
+                new(2.5f, -3.8f),
+                new(1.25f, -3.8f),
+                new(0f, -3.8f),
+                new(-1.25f, -3.8f),
+                new(-2.5f, -3.8f),
+                new(-3.45f, -3.55f),
+                new(-4.15f, -2.95f),
+                new(-4.15f, -2.15f),
+                new(-4.15f, -1.35f),
+                new(-3.45f, -0.75f),
+                new(-2.5f, -0.5f),
+                new(-1.25f, -0.5f)
             };
-
             List<Transform> points = new(positions.Length);
             for (int index = 0; index < positions.Length; index++)
             {
@@ -57,10 +80,6 @@ namespace BubbleFruitLoop.Editor
             EditorUtility.SetDirty(authoring);
             EditorUtility.SetDirty(controller);
             EditorPrefs.SetInt(InstallKey, Version);
-            Selection.activeGameObject = root;
-
-            if (!wasDirty) EditorSceneManager.SaveScene(scene);
-            else EditorSceneManager.MarkSceneDirty(scene);
         }
     }
 }

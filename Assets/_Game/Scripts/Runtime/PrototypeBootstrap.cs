@@ -13,15 +13,22 @@ namespace BubbleFruitLoop.Runtime
     {
         private const int FlightFruitOrder = 80;
         [Header("Scene References")]
-        [SerializeField] private Camera gameplayCamera;
-        [SerializeField] private Transform poolRoot;
-        [SerializeField] private Fruit fruitPrefab;
-        [SerializeField] private BubbleActor bubblePrefab;
-        [SerializeField] private BoxView boxPrefab;
-        [SerializeField] private BubbleActor[] bubbles;
-        [SerializeField] private Fruit[] fruits;
-        [SerializeField] private BoxColumnAuthoring[] columns;
-
+        [SerializeField]
+        private Camera gameplayCamera;
+        [SerializeField]
+        private Transform poolRoot;
+        [SerializeField]
+        private Fruit fruitPrefab;
+        [SerializeField]
+        private BubbleActor bubblePrefab;
+        [SerializeField]
+        private BoxView boxPrefab;
+        [SerializeField]
+        private BubbleActor[] bubbles;
+        [SerializeField]
+        private Fruit[] fruits;
+        [SerializeField]
+        private BoxColumnAuthoring[] columns;
         private readonly Dictionary<Collider2D, BubbleActor> bubbleByCollider = new();
         private readonly List<Fruit> trackedFruits = new(48);
         private ComponentPool<Fruit> fruitPool;
@@ -31,12 +38,8 @@ namespace BubbleFruitLoop.Runtime
         private FunnelIntakeManager intake;
         private PickupSystem pickup;
         private GameStateResolver stateResolver;
-
         private readonly Dictionary<BoxRuntime, BoxView> boxViewMap = new();
-
-        public void ConfigureScene(Camera cameraReference, Transform poolContainer, Fruit fruitTemplate,
-            BubbleActor bubbleTemplate, BoxView boxTemplate, BubbleActor[] sceneBubbles,
-            Fruit[] sceneFruits, BoxColumnAuthoring[] sceneColumns)
+        public void ConfigureScene(Camera cameraReference, Transform poolContainer, Fruit fruitTemplate, BubbleActor bubbleTemplate, BoxView boxTemplate, BubbleActor[] sceneBubbles, Fruit[] sceneFruits, BoxColumnAuthoring[] sceneColumns)
         {
             gameplayCamera = cameraReference;
             poolRoot = poolContainer;
@@ -123,13 +126,13 @@ namespace BubbleFruitLoop.Runtime
             }
         }
 
-        private System.Collections.IEnumerator AnimateFruitToBox(Fruit fruit, BoxView owner,
-            Transform target, int slotIndex)
+        private System.Collections.IEnumerator AnimateFruitToBox(Fruit fruit, BoxView owner, Transform target, int slotIndex)
         {
             SpriteRenderer flightRenderer = fruit != null ? fruit.VisualSpriteRenderer : null;
             Sprite flightSprite = flightRenderer != null ? flightRenderer.sprite : null;
             int originalSortingOrder = flightRenderer != null ? flightRenderer.sortingOrder : 0;
-            if (flightRenderer != null) flightRenderer.sortingOrder = FlightFruitOrder;
+            if (flightRenderer != null)
+                flightRenderer.sortingOrder = FlightFruitOrder;
             fruit.DisablePhysics(); // make sure it's kinematic/disabled
             Vector3 startPos = fruit.CachedTransform.position;
             float verticalGap = Mathf.Abs(startPos.y - target.position.y);
@@ -139,28 +142,11 @@ namespace BubbleFruitLoop.Runtime
             float duration = 0.34f;
             while (elapsed < duration)
             {
-                elapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsed / duration);
-                float eased = t * t * (3f - 2f * t);
-                float inverse = 1f - eased;
-                fruit.CachedTransform.position = inverse * inverse * startPos
-                    + 2f * inverse * eased * control
-                    + eased * eased * target.position;
-                fruit.CachedTransform.Rotate(0f, 0f, 360f * Time.deltaTime);
+                UpdatePrototypeFlight(fruit, target, startPos, control, ref elapsed, duration);
                 yield return null;
             }
 
-            if (owner != null && owner.gameObject.activeInHierarchy)
-            {
-                if (!owner.DockFruit(fruit, flightRenderer, flightSprite, slotIndex)
-                    && flightRenderer != null)
-                    flightRenderer.sortingOrder = originalSortingOrder;
-            }
-            else
-            {
-                if (flightRenderer != null) flightRenderer.sortingOrder = originalSortingOrder;
-                fruitPool.Despawn(fruit);
-            }
+            CompletePrototypeCollection(fruit, owner, slotIndex, flightRenderer, flightSprite, originalSortingOrder);
         }
 
         private BoxBoardManager BuildBoxBoard()
@@ -171,15 +157,14 @@ namespace BubbleFruitLoop.Runtime
                 BoxColumnAuthoring source = columns[columnIndex];
                 BoxColumnRuntime runtime = new(columnIndex, source.ActivePoint.position, source.PickupPoint.position);
                 board.AddColumn(runtime);
-
                 // Also subscribe to visual activations
-                runtime.OnBoxActivated += (boxRt, pos) => {
+                runtime.OnBoxActivated += (boxRt, pos) =>
+                {
                     if (boxViewMap.TryGetValue(boxRt, out BoxView view))
                     {
                         view.PlayPromote(pos);
                     }
                 };
-
                 for (int boxIndex = 0; boxIndex < source.Boxes.Length; boxIndex++)
                 {
                     BoxView view = source.Boxes[boxIndex];
@@ -189,6 +174,7 @@ namespace BubbleFruitLoop.Runtime
                     runtime.Enqueue(view.Runtime);
                 }
             }
+
             return board;
         }
 
@@ -210,9 +196,11 @@ namespace BubbleFruitLoop.Runtime
         private void HandleTap()
         {
             Pointer pointer = Pointer.current;
-            if (pointer == null || !pointer.press.wasPressedThisFrame) return;
+            if (pointer == null || !pointer.press.wasPressedThisFrame)
+                return;
             Vector3 screenPosition = pointer.position.ReadValue();
-            if (UICanvasGameSetting.IsGameplayTapBlocked(screenPosition)) return;
+            if (UICanvasGameSetting.IsGameplayTapBlocked(screenPosition))
+                return;
             Vector3 worldPosition = gameplayCamera.ScreenToWorldPoint(screenPosition);
             Collider2D[] hits = Physics2D.OverlapPointAll(worldPosition);
             for (int i = 0; i < hits.Length; i++)
@@ -224,14 +212,17 @@ namespace BubbleFruitLoop.Runtime
                 }
             }
         }
+
         private void MoveReleasedFruitToIntake()
         {
             for (int index = 0; index < trackedFruits.Count; index++)
             {
                 Fruit fruit = trackedFruits[index];
-                if (fruit.State == FruitStatus.Released) intake.Submit(fruit);
+                if (fruit.State == FruitStatus.Released)
+                    intake.Submit(fruit);
             }
         }
+
         private Transform CreatePoolRoot(string name)
         {
             Transform child = new GameObject(name).transform;
@@ -239,12 +230,39 @@ namespace BubbleFruitLoop.Runtime
             return child;
         }
 
-        private void OnLoopSlotReleased(Fruit fruit) { }
+        private void OnLoopSlotReleased(Fruit fruit)
+        {
+        }
 
         private void ValidateReferences()
         {
             if (gameplayCamera == null || poolRoot == null || fruitPrefab == null || bubblePrefab == null || boxPrefab == null)
                 throw new MissingReferenceException("Prototype scene references are incomplete. Rebuild from Tools/Bubble Fruit Loop.");
+        }
+
+        private void CompletePrototypeCollection(Fruit fruit, BoxView owner, int slotIndex, SpriteRenderer flightRenderer, Sprite flightSprite, int originalSortingOrder)
+        {
+            if (owner != null && owner.gameObject.activeInHierarchy)
+            {
+                if (!owner.DockFruit(fruit, flightRenderer, flightSprite, slotIndex) && flightRenderer != null)
+                    flightRenderer.sortingOrder = originalSortingOrder;
+            }
+            else
+            {
+                if (flightRenderer != null)
+                    flightRenderer.sortingOrder = originalSortingOrder;
+                fruitPool.Despawn(fruit);
+            }
+        }
+
+        private void UpdatePrototypeFlight(Fruit fruit, Transform target, Vector3 startPos, Vector3 control, ref float elapsed, float duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float eased = t * t * (3f - 2f * t);
+            float inverse = 1f - eased;
+            fruit.CachedTransform.position = inverse * inverse * startPos + 2f * inverse * eased * control + eased * eased * target.position;
+            fruit.CachedTransform.Rotate(0f, 0f, 360f * Time.deltaTime);
         }
     }
 }

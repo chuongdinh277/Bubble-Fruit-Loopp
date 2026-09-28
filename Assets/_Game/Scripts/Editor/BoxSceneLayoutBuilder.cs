@@ -17,11 +17,11 @@ namespace BubbleFruitLoop.Editor
         private const float BoxScale = 1.05f;
         private const float FirstRowWorldY = -2.45f;
         private const float RowWorldSpacing = 1.72f;
-
         [InitializeOnLoadMethod]
         private static void ScheduleBuild()
         {
-            if (EditorPrefs.GetInt(VersionKey, 0) >= Version) return;
+            if (EditorPrefs.GetInt(VersionKey, 0) >= Version)
+                return;
             EditorApplication.delayCall += ApplySpacingWhenReady;
         }
 
@@ -32,8 +32,8 @@ namespace BubbleFruitLoop.Editor
                 EditorApplication.delayCall += ApplySpacingWhenReady;
                 return;
             }
-            if (PrefabStageUtility.GetCurrentPrefabStage() != null ||
-                SceneManager.GetActiveScene().name != "SampleScene")
+
+            if (PrefabStageUtility.GetCurrentPrefabStage() != null || SceneManager.GetActiveScene().name != "SampleScene")
             {
                 EditorApplication.delayCall += ApplySpacingWhenReady;
                 return;
@@ -46,19 +46,7 @@ namespace BubbleFruitLoop.Editor
                 return;
             }
 
-            foreach (BoxAssignmentTable.Entry entry in table.Entries)
-            {
-                if (entry?.box == null) continue;
-                Vector3 position = entry.box.transform.position;
-                position.x = (1 - entry.column) * ColumnSpacing;
-                position.y = FirstRowWorldY - entry.queueOrder * RowWorldSpacing;
-                entry.box.transform.position = position;
-                PrefabUtility.RecordPrefabInstancePropertyModifications(entry.box.transform);
-            }
-            EditorUtility.SetDirty(table);
-            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-            EditorSceneManager.SaveOpenScenes();
-            EditorPrefs.SetInt(VersionKey, Version);
+            ApplyAssignedBoxPositions(table);
         }
 
         private static void BuildWhenReady()
@@ -68,12 +56,14 @@ namespace BubbleFruitLoop.Editor
                 EditorApplication.delayCall += BuildWhenReady;
                 return;
             }
+
             if (PrefabStageUtility.GetCurrentPrefabStage() != null || SceneManager.GetActiveScene().name != "SampleScene")
             {
                 EditorSceneManager.OpenScene("Assets/Scenes/SampleScene.unity", OpenSceneMode.Single);
                 EditorApplication.delayCall += BuildWhenReady;
                 return;
             }
+
             BuildLayout();
             EditorPrefs.SetInt(VersionKey, Version);
         }
@@ -91,37 +81,83 @@ namespace BubbleFruitLoop.Editor
             }
 
             Transform oldLayout = GameObject.Find(LayoutName)?.transform;
-            if (oldLayout != null) Object.DestroyImmediate(oldLayout.gameObject);
-
+            if (oldLayout != null)
+                Object.DestroyImmediate(oldLayout.gameObject);
             GameObject layoutRoot = new(LayoutName);
             Undo.RegisterCreatedObjectUndo(layoutRoot, "Create editable box layout");
             BoxAssignmentTable assignmentTable = layoutRoot.AddComponent<BoxAssignmentTable>();
-            LevelData level = AssetDatabase.LoadAssetAtPath<LevelData>(
-                "Assets/_Game/Resources/Levels/Level_01.asset");
+            LevelData level = AssetDatabase.LoadAssetAtPath<LevelData>("Assets/_Game/Resources/Levels/Level_01.asset");
             if (level == null || level.boxes == null || level.boxes.Count == 0)
             {
                 Debug.LogError("Level_01 has no saved boxes to build.");
                 Object.DestroyImmediate(layoutRoot);
                 return;
             }
+
             BoxView[] boxes = new BoxView[level.boxes.Count];
             FruitType[] types = new FruitType[level.boxes.Count];
             int[] columns = new int[level.boxes.Count];
             int[] queueOrders = new int[level.boxes.Count];
+            SpawnLayoutBoxes(layoutRoot, level, boxes, types, columns, queueOrders);
+            ConfigureLayoutManager(loop, layoutRoot, assignmentTable, boxes, types, columns, queueOrders);
+        }
 
+        private static void NormalizePickupPositions(Transform[] points)
+        {
+            if (points == null || points.Length < 3 || points[0] == null || points[2] == null)
+                return;
+            if (points[0].position.x >= points[2].position.x)
+                return;
+            Vector3 right = points[2].position;
+            Vector3 left = points[0].position;
+            points[0].position = right;
+            points[2].position = left;
+            EditorUtility.SetDirty(points[0]);
+            EditorUtility.SetDirty(points[2]);
+        }
+
+        private static Color ColorFor(FruitType type) => type switch
+        {
+            FruitType.Apple => new Color(0f, 0.46f, 1f),
+            FruitType.Orange => new Color(1f, 0.52f, 0.08f),
+            FruitType.Grape => new Color(0.58f, 0.24f, 0.88f),
+            FruitType.Lemon => new Color(1f, 0.84f, 0.12f),
+            FruitType.Strawberry => new Color(1f, 0.34f, 0.52f),
+            _ => Color.white
+        };
+        private static void ApplyAssignedBoxPositions(BoxAssignmentTable table)
+        {
+            foreach (BoxAssignmentTable.Entry entry in table.Entries)
+            {
+                if (entry?.box == null)
+                    continue;
+                Vector3 position = entry.box.transform.position;
+                position.x = (1 - entry.column) * ColumnSpacing;
+                position.y = FirstRowWorldY - entry.queueOrder * RowWorldSpacing;
+                entry.box.transform.position = position;
+                PrefabUtility.RecordPrefabInstancePropertyModifications(entry.box.transform);
+            }
+
+            EditorUtility.SetDirty(table);
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+            EditorSceneManager.SaveOpenScenes();
+            EditorPrefs.SetInt(VersionKey, Version);
+        }
+
+        private static void SpawnLayoutBoxes(GameObject layoutRoot, LevelData level, BoxView[] boxes, FruitType[] types, int[] columns, int[] queueOrders)
+        {
             for (int index = 0; index < level.boxes.Count; index++)
             {
                 LevelData.BoxSpawnData savedBox = level.boxes[index];
                 int row = index / 3;
                 int column = index % 3;
                 int capacity = Mathf.Max(1, savedBox.capacity);
-                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(
-                    "Assets/_Game/Resources/Box4.prefab");
-                if (prefab == null) continue;
+                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Game/Resources/Box4.prefab");
+                if (prefab == null)
+                    continue;
                 GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, layoutRoot.transform);
                 instance.name = $"C{column + 1} Q{row + 1} - {savedBox.fruitType} Box{capacity}";
-                instance.transform.position = new Vector3((1 - column) * ColumnSpacing,
-                    FirstRowWorldY - row * RowWorldSpacing, 0f);
+                instance.transform.position = new Vector3((1 - column) * ColumnSpacing, FirstRowWorldY - row * RowWorldSpacing, 0f);
                 instance.transform.localScale = Vector3.one * BoxScale;
                 BoxView view = instance.GetComponent<BoxView>();
                 view.Configure(savedBox.fruitType, capacity, ColorFor(savedBox.fruitType));
@@ -132,9 +168,13 @@ namespace BubbleFruitLoop.Editor
                 queueOrders[index] = row;
                 EditorUtility.SetDirty(view);
             }
+        }
 
+        private static void ConfigureLayoutManager(FruitLoopManager loop, GameObject layoutRoot, BoxAssignmentTable assignmentTable, BoxView[] boxes, FruitType[] types, int[] columns, int[] queueOrders)
+        {
             BoxManager board = loop.GetComponent<BoxManager>();
-            if (board == null) board = Undo.AddComponent<BoxManager>(loop.gameObject);
+            if (board == null)
+                board = Undo.AddComponent<BoxManager>(loop.gameObject);
             Transform[] pickupPoints =
             {
                 GameObject.Find("P1")?.transform,
@@ -153,28 +193,6 @@ namespace BubbleFruitLoop.Editor
             SceneView.lastActiveSceneView?.FrameSelected();
             Debug.Log("Created 3x4 editable box layout directly in SampleScene.");
         }
-
-        private static void NormalizePickupPositions(Transform[] points)
-        {
-            if (points == null || points.Length < 3 || points[0] == null || points[2] == null) return;
-            if (points[0].position.x >= points[2].position.x) return;
-            Vector3 right = points[2].position;
-            Vector3 left = points[0].position;
-            points[0].position = right;
-            points[2].position = left;
-            EditorUtility.SetDirty(points[0]);
-            EditorUtility.SetDirty(points[2]);
-        }
-
-        private static Color ColorFor(FruitType type) => type switch
-        {
-            FruitType.Apple => new Color(0f, 0.46f, 1f),
-            FruitType.Orange => new Color(1f, 0.52f, 0.08f),
-            FruitType.Grape => new Color(0.58f, 0.24f, 0.88f),
-            FruitType.Lemon => new Color(1f, 0.84f, 0.12f),
-            FruitType.Strawberry => new Color(1f, 0.34f, 0.52f),
-            _ => Color.white
-        };
     }
 }
 #endif

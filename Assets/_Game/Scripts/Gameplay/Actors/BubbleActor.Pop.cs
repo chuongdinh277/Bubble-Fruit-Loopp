@@ -4,7 +4,8 @@ using UnityEngine;
 namespace BubbleFruitLoop.Gameplay
 {
     public sealed partial class BubbleActor
-    {        private IEnumerator PlayPopEffect()
+    {
+        private IEnumerator PlayPopEffect()
         {
             Vector3 startScale = visualRoot != null ? visualRoot.localScale : Vector3.one;
             yield return AnimatePopAnticipation(startScale);
@@ -20,12 +21,14 @@ namespace BubbleFruitLoop.Gameplay
             BubbleActor[] remainingBubbles = FindObjectsByType<BubbleActor>(FindObjectsSortMode.None);
             for (int index = 0; index < remainingBubbles.Length; index++)
             {
-                if (remainingBubbles[index] != null && !remainingBubbles[index].IsPopped) return;
+                if (remainingBubbles[index] != null && !remainingBubbles[index].IsPopped)
+                    return;
             }
 
             Fruit[] releasedFruit = FindObjectsByType<Fruit>(FindObjectsSortMode.None);
             for (int index = 0; index < releasedFruit.Length; index++)
-                if (releasedFruit[index] != null) releasedFruit[index].ArmClearRecovery();
+                if (releasedFruit[index] != null)
+                    releasedFruit[index].ArmClearRecovery();
         }
 
         // Compress the bubble shell before its burst.
@@ -37,10 +40,7 @@ namespace BubbleFruitLoop.Gameplay
         // Expand the shell to its short burst scale.
         private IEnumerator AnimatePopBurst(Vector3 startScale)
         {
-            yield return AnimateVisualScale(
-                visualRoot != null ? visualRoot.localScale : startScale,
-                startScale * popBurstScale,
-                popBurstDuration);
+            yield return AnimateVisualScale(visualRoot != null ? visualRoot.localScale : startScale, startScale * popBurstScale, popBurstDuration);
         }
 
         // Release each contained fruit with its outward burst impulse.
@@ -56,36 +56,23 @@ namespace BubbleFruitLoop.Gameplay
                 Fruit fruit = fruits[index];
                 if (fruit == null)
                 {
-                    if (index < fruits.Count - 1) yield return new WaitForSeconds(releaseInterval);
+                    if (index < fruits.Count - 1)
+                        yield return new WaitForSeconds(releaseInterval);
                     continue;
                 }
-                Vector2 radial = (Vector2)fruit.CachedTransform.position - burstCenter;
-                if (radial.sqrMagnitude < 0.0025f)
-                {
-                    float fallbackAngle = (index + 0.5f) / Mathf.Max(1, fruits.Count) * Mathf.PI * 2f;
-                    radial = new Vector2(Mathf.Cos(fallbackAngle), Mathf.Sin(fallbackAngle));
-                }
-                radial.Normalize();
 
-                // A short outward puff separates the fruit silhouettes before
-                // gravity takes over. A small lift keeps it readable as a burst,
-                // while the capped force prevents fruit escaping the chute.
-                float force = Random.Range(
-                    Mathf.Min(fruitBurstForceMin, fruitBurstForceMax),
-                    Mathf.Max(fruitBurstForceMin, fruitBurstForceMax));
-                Vector2 sidewaysVariation = new(-radial.y, radial.x);
-                Vector2 burstVelocity = radial * force
-                    + Vector2.up * fruitBurstLift
-                    + sidewaysVariation * Random.Range(-0.18f, 0.18f);
-                fruit.Release(inheritedVelocity + burstVelocity);
-                if (index < fruits.Count - 1) yield return new WaitForSeconds(releaseInterval);
+                ConfigureReleasedFruit(inheritedVelocity, burstCenter, index, fruit);
+                if (index < fruits.Count - 1)
+                    yield return new WaitForSeconds(releaseInterval);
             }
+
             fruits.Clear();
         }
 
         private IEnumerator AnimateVisualScale(Vector3 from, Vector3 to, float duration)
         {
-            if (visualRoot == null) yield break;
+            if (visualRoot == null)
+                yield break;
             float elapsed = 0f;
             while (elapsed < duration)
             {
@@ -95,6 +82,7 @@ namespace BubbleFruitLoop.Gameplay
                 visualRoot.localScale = Vector3.LerpUnclamped(from, to, progress);
                 yield return null;
             }
+
             visualRoot.localScale = to;
         }
 
@@ -125,14 +113,9 @@ namespace BubbleFruitLoop.Gameplay
             main.gravityModifier = -0.08f;
             main.simulationSpace = ParticleSystemSimulationSpace.World;
             main.maxParticles = Mathf.Max(20, popBubbleCount);
-
             ParticleSystem.EmissionModule emission = particles.emission;
             emission.rateOverTime = 0f;
-            emission.SetBursts(new[]
-            {
-                new ParticleSystem.Burst(0f, (short)popBubbleCount)
-            });
-
+            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, (short)popBubbleCount) });
         }
 
         // Spread particles evenly around the bubble's pop point.
@@ -142,7 +125,6 @@ namespace BubbleFruitLoop.Gameplay
             shape.shapeType = ParticleSystemShapeType.Circle;
             shape.radius = 0.65f;
             shape.radiusThickness = 1f;
-
         }
 
         // Fade particle size and color over their lifetime.
@@ -150,21 +132,12 @@ namespace BubbleFruitLoop.Gameplay
         {
             ParticleSystem.SizeOverLifetimeModule size = particles.sizeOverLifetime;
             size.enabled = true;
-            size.size = new ParticleSystem.MinMaxCurve(1f,
-                new AnimationCurve(
-                    new Keyframe(0f, 0.35f),
-                    new Keyframe(0.18f, 1f),
-                    new Keyframe(0.72f, 0.8f),
-                    new Keyframe(1f, 0f)));
-
+            size.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0f, 0.35f), new Keyframe(0.18f, 1f), new Keyframe(0.72f, 0.8f), new Keyframe(1f, 0f)));
             ParticleSystem.ColorOverLifetimeModule color = particles.colorOverLifetime;
             color.enabled = true;
             Gradient fade = new();
-            fade.SetKeys(
-                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(0.75f, 0.92f, 1f), 1f) },
-                new[] { new GradientAlphaKey(0.9f, 0f), new GradientAlphaKey(0.65f, 0.65f), new GradientAlphaKey(0f, 1f) });
+            fade.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(0.75f, 0.92f, 1f), 1f) }, new[] { new GradientAlphaKey(0.9f, 0f), new GradientAlphaKey(0.65f, 0.65f), new GradientAlphaKey(0f, 1f) });
             color.color = fade;
-
         }
 
         // Match particle rendering to the bubble's artwork layer.
@@ -176,6 +149,23 @@ namespace BubbleFruitLoop.Gameplay
             particleRenderer.sortingOrder = 25;
         }
 
+        private void ConfigureReleasedFruit(Vector2 inheritedVelocity, Vector2 burstCenter, int index, Fruit fruit)
+        {
+            Vector2 radial = (Vector2)fruit.CachedTransform.position - burstCenter;
+            if (radial.sqrMagnitude < 0.0025f)
+            {
+                float fallbackAngle = (index + 0.5f) / Mathf.Max(1, fruits.Count) * Mathf.PI * 2f;
+                radial = new Vector2(Mathf.Cos(fallbackAngle), Mathf.Sin(fallbackAngle));
+            }
 
+            radial.Normalize();
+            // A short outward puff separates the fruit silhouettes before
+            // gravity takes over. A small lift keeps it readable as a burst,
+            // while the capped force prevents fruit escaping the chute.
+            float force = Random.Range(Mathf.Min(fruitBurstForceMin, fruitBurstForceMax), Mathf.Max(fruitBurstForceMin, fruitBurstForceMax));
+            Vector2 sidewaysVariation = new(-radial.y, radial.x);
+            Vector2 burstVelocity = radial * force + Vector2.up * fruitBurstLift + sidewaysVariation * Random.Range(-0.18f, 0.18f);
+            fruit.Release(inheritedVelocity + burstVelocity);
+        }
     }
 }

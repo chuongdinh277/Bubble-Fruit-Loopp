@@ -21,14 +21,20 @@ namespace BubbleFruitLoop.Editor
 
         public void ApplyBubbleScale(BubbleConfig cfg)
         {
-            if (cfg?.instance == null) return;
+            if (cfg?.instance == null)
+                return;
             // Never scale the BubbleActor root: FruitRoot is its sibling and must
             // keep the authored fruit size. Only the bubble shell visual changes.
-            Vector3 prefabRootScale = bubblePrefab != null
-                ? bubblePrefab.transform.localScale
-                : Vector3.one * 0.55f;
-            cfg.instance.transform.localScale = prefabRootScale;
+            Vector3 prefabRootScale = bubblePrefab != null ? bubblePrefab.transform.localScale : Vector3.one * 0.55f;
+            ResizeAuthoredBubble(cfg, prefabRootScale);
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(cfg.instance);
+#endif
+        }
 
+        private void ResizeAuthoredBubble(BubbleConfig cfg, Vector3 prefabRootScale)
+        {
+            cfg.instance.transform.localScale = prefabRootScale;
             Transform visual = cfg.instance.transform.Find("Visual");
             float rootScale = Mathf.Max(0.0001f, Mathf.Abs(prefabRootScale.x));
             float visualMultiplier = Mathf.Max(0.1f, cfg.bubbleScale) / rootScale;
@@ -44,20 +50,13 @@ namespace BubbleFruitLoop.Editor
             Transform boundary = cfg.instance.transform.Find("InnerBoundary");
             Transform prefabBoundary = bubblePrefab != null ? bubblePrefab.transform.Find("InnerBoundary") : null;
             if (boundary != null)
-                boundary.localScale = (prefabBoundary != null ? prefabBoundary.localScale : Vector3.one)
-                    * (visualMultiplier * InnerBoundaryInset);
-
+                boundary.localScale = (prefabBoundary != null ? prefabBoundary.localScale : Vector3.one) * (visualMultiplier * InnerBoundaryInset);
             if (cfg.instance.ObstacleCollider is CircleCollider2D circle)
             {
-                CircleCollider2D prefabCircle = bubblePrefab != null
-                    ? bubblePrefab.ObstacleCollider as CircleCollider2D
-                    : null;
-                if (prefabCircle != null) circle.radius = prefabCircle.radius * visualMultiplier;
+                CircleCollider2D prefabCircle = bubblePrefab != null ? bubblePrefab.ObstacleCollider as CircleCollider2D : null;
+                if (prefabCircle != null)
+                    circle.radius = prefabCircle.radius * visualMultiplier;
             }
-#if UNITY_EDITOR
-            EditorUtility.SetDirty(cfg.instance);
-#endif
         }
-
     }
 }
