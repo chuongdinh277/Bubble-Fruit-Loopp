@@ -246,29 +246,51 @@ namespace BubbleFruitLoop.Gameplay
         {
             if (!body.simulated || body.bodyType != RigidbodyType2D.Dynamic) return;
             Vector2 pathDirection = tangent.normalized;
-            MaintainPathForwardVelocity(pathDirection, targetSpeed);
-            ApplyPathCentering(target, centeringStrength);
-            ClampPathVelocity(targetSpeed, maxSpeed);
+            Vector2 pathNormal = new(-pathDirection.y, pathDirection.x);
+
+            // A damped spring keeps one lane without overwriting collision
+            // velocity. Unity's contact impulse remains intact and the fruit then
+            // settles smoothly back to the centre whenever room opens up.
+            float forwardSpeed = Vector2.Dot(body.linearVelocity, pathDirection);
+            float normalSpeed = Vector2.Dot(body.linearVelocity, pathNormal);
+            float normalError = Vector2.Dot(target - body.position, pathNormal);
+            const float driveResponse = 6.5f;
+            const float lateralDamping = 5.2f;
+            Vector2 driveAcceleration = pathDirection
+                * ((targetSpeed - forwardSpeed) * driveResponse);
+            Vector2 laneAcceleration = pathNormal
+                * (normalError * centeringStrength - normalSpeed * lateralDamping);
+            Vector2 acceleration = Vector2.ClampMagnitude(
+                driveAcceleration + laneAcceleration, 20f);
+            body.AddForce(acceleration * body.mass, ForceMode2D.Force);
+
+            float currentSpeed = body.linearVelocity.magnitude;
+            if (currentSpeed > maxSpeed)
+            {
+                Vector2 excessVelocity = body.linearVelocity.normalized
+                    * (currentSpeed - maxSpeed);
+                body.AddForce(-excessVelocity * body.mass * 8f, ForceMode2D.Force);
+            }
         }
 
         // Keep the fruit moving forward while retaining limited sideways contact motion.
         private void MaintainPathForwardVelocity(Vector2 pathDirection, float targetSpeed)
         {
             float currentForwardSpeed = Vector2.Dot(body.linearVelocity, pathDirection);
-            float forwardSpeed = Mathf.MoveTowards(currentForwardSpeed, targetSpeed, 12f * Time.fixedDeltaTime);
+            float forwardSpeed = Mathf.MoveTowards(currentForwardSpeed, targetSpeed, 7f * Time.fixedDeltaTime);
 
             // Preserve a limited amount of sideways collision movement while driving the fruit
             // forward at the Inspector's requested speed.
             Vector2 sidewaysVelocity = body.linearVelocity - pathDirection * currentForwardSpeed;
-            sidewaysVelocity = Vector2.ClampMagnitude(sidewaysVelocity, 0.45f);
+            sidewaysVelocity = Vector2.ClampMagnitude(sidewaysVelocity, 0.78f);
             body.linearVelocity = pathDirection * forwardSpeed + sidewaysVelocity;
         }
 
         // Pull the actor toward the authored path center.
         private void ApplyPathCentering(Vector2 target, float centeringStrength)
         {
-            Vector2 centeringForce = Vector2.ClampMagnitude(target - body.position, 0.3f) * centeringStrength;
-            body.AddForce(Vector2.ClampMagnitude(centeringForce, 18f), ForceMode2D.Force);
+            Vector2 centeringForce = Vector2.ClampMagnitude(target - body.position, 0.38f) * centeringStrength;
+            body.AddForce(Vector2.ClampMagnitude(centeringForce, 11f), ForceMode2D.Force);
         }
 
         // Prevent collision response from exceeding the movement speed limit.

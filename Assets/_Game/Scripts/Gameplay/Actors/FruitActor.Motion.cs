@@ -9,8 +9,8 @@ namespace BubbleFruitLoop.Gameplay
             SetState(FruitState.Released);
             body.bodyType = RigidbodyType2D.Dynamic;
             body.freezeRotation = false;
-            body.gravityScale = 1f;
-            body.linearDamping = 1.2f;
+            body.gravityScale = 1.45f;
+            body.linearDamping = 0.18f;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
             body.linearVelocity = inheritedVelocity;
 
@@ -71,6 +71,29 @@ namespace BubbleFruitLoop.Gameplay
             lastContactTime = Time.time;
         }
 
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            ApplyLoopContactMotion(collision);
+        }
+
+        private void ApplyLoopContactMotion(Collision2D collision)
+        {
+            if (state != FruitState.OnLoop || body == null) return;
+            FruitActor other = collision.collider.GetComponentInParent<FruitActor>();
+            if (other == null || other == this || other.State != FruitState.OnLoop) return;
+
+            // The collider creates the contact. We only cap and stylise its spin so
+            // packed fruit keep nudging and rolling instead of looking welded.
+            float impact = Mathf.Clamp(collision.relativeVelocity.magnitude, 0.2f, 4f);
+            float side = Mathf.Sign(Vector2.Dot(
+                collision.GetContact(0).normal, Vector2.right));
+            if (Mathf.Abs(side) < 0.01f)
+                side = GetInstanceID() < other.GetInstanceID() ? -1f : 1f;
+            float torque = impact * 0.008f * side;
+            body.AddTorque(torque, ForceMode2D.Impulse);
+            body.angularVelocity = Mathf.Clamp(body.angularVelocity, -150f, 150f);
+        }
+
         private void OnDisable()
         {
             clearRecoveryArmed = false;
@@ -111,10 +134,9 @@ namespace BubbleFruitLoop.Gameplay
             state = loopIsFull ? FruitState.WaitingFull : FruitState.EntryCongestion;
             body.simulated = true;
             body.bodyType = RigidbodyType2D.Dynamic;
-            // Entry motion is velocity-controlled below. A little gravity keeps
-            // contact with the sloped chute without making each collision produce a
-            // visibly different falling speed.
-            body.gravityScale = loopIsFull ? 1f : 0.22f;
+            // Fruit stays under real chute physics until it actually reaches T0.
+            // No steering force pulls it from the funnel into the loop lane.
+            body.gravityScale = 1f;
             body.linearDamping = loopIsFull ? 1.2f : 0.35f;
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
@@ -150,13 +172,16 @@ namespace BubbleFruitLoop.Gameplay
             pathDistance = distance;
             state = FruitState.OnLoop;
             body.simulated = true;
-            body.bodyType = RigidbodyType2D.Kinematic;
+            // Keep loop fruit dynamic: colliders contact at the real impact frame.
+            // Path following controls travel while Unity resolves the push.
+            body.bodyType = RigidbodyType2D.Dynamic;
             body.gravityScale = 0f;
-            body.linearDamping = 1f;
-            body.angularDamping = 2f;
-            body.freezeRotation = true;
-            body.linearVelocity = Vector2.zero;
+            body.linearDamping = 0.3f;
+            body.angularDamping = 1.15f;
+            body.freezeRotation = false;
+            body.linearVelocity = entryVelocity;
             body.angularVelocity = 0f;
+            body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
 
