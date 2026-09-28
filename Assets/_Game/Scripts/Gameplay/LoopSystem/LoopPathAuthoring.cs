@@ -219,6 +219,36 @@ namespace BubbleFruitLoop.Gameplay
                 Physics2D.IgnoreCollision(outerBoundary, fruitCollider, ignored);
         }
 
+        public Vector2 ConstrainFruitCenterToTrack(
+            Vector2 position, Vector2 pathCenter, float fruitRadius)
+        {
+            if (outerBoundary == null || innerBoundary == null) EnsureBoundaryObjects();
+            float clearance = Mathf.Max(0.01f, fruitRadius + wallEdgeRadius + 0.025f);
+            // Repeat because correcting against one wall can move a large fruit
+            // closer to the opposite wall on narrow hand-authored sections.
+            for (int pass = 0; pass < 2; pass++)
+            {
+                position = PushInsideBoundary(position, pathCenter, outerBoundary, clearance);
+                position = PushInsideBoundary(position, pathCenter, innerBoundary, clearance);
+            }
+            return position;
+        }
+
+        private static Vector2 PushInsideBoundary(Vector2 position, Vector2 pathCenter,
+            EdgeCollider2D boundary, float clearance)
+        {
+            if (boundary == null || !boundary.enabled) return position;
+            Vector2 closest = boundary.ClosestPoint(position);
+            Vector2 inward = pathCenter - closest;
+            if (inward.sqrMagnitude < 0.000001f) inward = pathCenter - position;
+            if (inward.sqrMagnitude < 0.000001f) return position;
+            inward.Normalize();
+            float signedClearance = Vector2.Dot(position - closest, inward);
+            return signedClearance < clearance
+                ? closest + inward * clearance
+                : position;
+        }
+
         private void OnDrawGizmos()
         {
             if (points == null || points.Count < 2) return;

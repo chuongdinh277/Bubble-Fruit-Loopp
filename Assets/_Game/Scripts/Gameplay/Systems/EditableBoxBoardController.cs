@@ -24,7 +24,6 @@ namespace BubbleFruitLoop.Gameplay
         private readonly Dictionary<FruitActor, float> previousDistances = new(40);
         private readonly Dictionary<BoxRuntime, BoxView> views = new();
         private static Material fruitFlightTrailMaterial;
-        private const float PickupCatchDistance = 0.24f;
         private const int FlightFruitOrder = 80;
         private const float AuthoredColumnSpacing = 1.65f;
         private const float AuthoredFirstRowY = -2.45f;
@@ -93,7 +92,7 @@ namespace BubbleFruitLoop.Gameplay
                 if (targetColumnIndex >= 0)
                 {
                     Column targetColumn = columns[targetColumnIndex];
-                    if (ReachedPickup(previous, current, targetColumn.PickupDistance))
+                    if (Crossed(previous, current, targetColumn.PickupDistance))
                         TryCollect(fruit, targetColumn, targetColumnIndex);
                 }
 

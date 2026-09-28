@@ -11,7 +11,7 @@ namespace BubbleFruitLoop.Gameplay
             yield return AnimatePopBurst(startScale);
             SpawnPopBubbles();
             SetVisualsEnabled(false);
-            ReleaseContents();
+            yield return ReleaseContentsInSequence();
             ArmFruitRecoveryIfLastBubble();
         }
 
@@ -44,14 +44,21 @@ namespace BubbleFruitLoop.Gameplay
         }
 
         // Release each contained fruit with its outward burst impulse.
-        private void ReleaseContents()
+        private IEnumerator ReleaseContentsInSequence()
         {
             Vector2 inheritedVelocity = physicsBody != null ? physicsBody.linearVelocity : Vector2.zero;
             Vector2 burstCenter = transform.position;
+            // Release on a short cadence so the fruit forms a visible stream
+            // instead of becoming one simultaneous pile below the bubble.
+            const float releaseInterval = 0.012f;
             for (int index = 0; index < fruits.Count; index++)
             {
                 FruitActor fruit = fruits[index];
-                if (fruit == null) continue;
+                if (fruit == null)
+                {
+                    if (index < fruits.Count - 1) yield return new WaitForSeconds(releaseInterval);
+                    continue;
+                }
                 Vector2 radial = (Vector2)fruit.CachedTransform.position - burstCenter;
                 if (radial.sqrMagnitude < 0.0025f)
                 {
@@ -71,6 +78,7 @@ namespace BubbleFruitLoop.Gameplay
                     + Vector2.up * fruitBurstLift
                     + sidewaysVariation * Random.Range(-0.18f, 0.18f);
                 fruit.Release(inheritedVelocity + burstVelocity);
+                if (index < fruits.Count - 1) yield return new WaitForSeconds(releaseInterval);
             }
             fruits.Clear();
         }

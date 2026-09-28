@@ -9,10 +9,11 @@ namespace BubbleFruitLoop.Gameplay
             SetState(FruitState.Released);
             body.bodyType = RigidbodyType2D.Dynamic;
             body.freezeRotation = false;
-            body.gravityScale = 1.45f;
-            body.linearDamping = 0.18f;
+            body.gravityScale = 2.1f;
+            body.linearDamping = 0.10f;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
             body.linearVelocity = inheritedVelocity;
+            RestoreOriginalPhysicsMaterial();
 
             // Fruits inside bubbles ignore every outer shell while contained. Restore
             // those contacts on release so falling fruit can land on and press the
@@ -39,12 +40,12 @@ namespace BubbleFruitLoop.Gameplay
             touchingSupport = false;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (!clearRecoveryArmed || body == null || !body.simulated
                 || (state != FruitState.Released && state != FruitState.Jammed)) return;
 
-            recoveryCooldown = Mathf.Max(0f, recoveryCooldown - Time.fixedDeltaTime);
+            recoveryCooldown = Mathf.Max(0f, recoveryCooldown - Time.deltaTime);
             bool hasRecentSupport = touchingSupport && Time.time - lastContactTime <= 0.12f;
             touchingSupport = false;
             if (!hasRecentSupport || body.linearVelocity.sqrMagnitude > 0.055f)
@@ -53,7 +54,7 @@ namespace BubbleFruitLoop.Gameplay
                 return;
             }
 
-            jammedDuration += Time.fixedDeltaTime;
+            jammedDuration += Time.deltaTime;
             if (jammedDuration < 0.48f || recoveryCooldown > 0f || recoveryAttempts >= 3) return;
 
             float direction = ((GetInstanceID() + recoveryAttempts) & 1) == 0 ? -1f : 1f;
@@ -66,6 +67,7 @@ namespace BubbleFruitLoop.Gameplay
 
         private void OnCollisionStay2D(Collision2D collision)
         {
+            ApplyControlledLoopPush(collision, 1f);
             if (!clearRecoveryArmed) return;
             touchingSupport = true;
             lastContactTime = Time.time;
@@ -73,25 +75,32 @@ namespace BubbleFruitLoop.Gameplay
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            ApplyLoopContactMotion(collision);
+            ApplyControlledLoopPush(collision, 0.65f);
         }
 
-        private void ApplyLoopContactMotion(Collision2D collision)
+        private void ApplyControlledLoopPush(Collision2D collision, float sustainedWeight)
         {
             if (state != FruitState.OnLoop || body == null) return;
             FruitActor other = collision.collider.GetComponentInParent<FruitActor>();
             if (other == null || other == this || other.State != FruitState.OnLoop) return;
+            if (collision.contactCount == 0) return;
+            if (body.linearVelocity.sqrMagnitude <= other.body.linearVelocity.sqrMagnitude + 0.0025f)
+                return;
 
-            // The collider creates the contact. We only cap and stylise its spin so
-            // packed fruit keep nudging and rolling instead of looking welded.
-            float impact = Mathf.Clamp(collision.relativeVelocity.magnitude, 0.2f, 4f);
-            float side = Mathf.Sign(Vector2.Dot(
-                collision.GetContact(0).normal, Vector2.right));
-            if (Mathf.Abs(side) < 0.01f)
-                side = GetInstanceID() < other.GetInstanceID() ? -1f : 1f;
-            float torque = impact * 0.008f * side;
-            body.AddTorque(torque, ForceMode2D.Impulse);
-            body.angularVelocity = Mathf.Clamp(body.angularVelocity, -150f, 150f);
+            Vector2 awayFromThis = other.body.position - body.position;
+            if (awayFromThis.sqrMagnitude < 0.0001f)
+                awayFromThis = -collision.GetContact(0).normal;
+            awayFromThis.Normalize();
+            Vector2 pushDirection = (awayFromThis + Vector2.up * 0.22f).normalized;
+            float closingSpeed = Mathf.Max(0f,
+                Vector2.Dot(body.linearVelocity - other.body.linearVelocity, awayFromThis));
+            float pushForce = Mathf.Lerp(2.2f, 5.2f,
+                Mathf.InverseLerp(0f, 3.5f, closingSpeed)) * sustainedWeight;
+
+            // Contact is real; only its extra game-feel force is authored. Applying
+            // Force over contact frames makes the rear fruit steadily press the
+            // front fruit forward/up instead of producing a one-frame impulse.
+            other.body.AddForce(pushDirection * pushForce, ForceMode2D.Force);
         }
 
         private void OnDisable()
@@ -127,6 +136,7 @@ namespace BubbleFruitLoop.Gameplay
             body.angularDamping = 2.5f;
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
+            UseLoopFrictionlessMaterial();
         }
 
         public void EnterCongestion(bool loopIsFull)
@@ -136,8 +146,8 @@ namespace BubbleFruitLoop.Gameplay
             body.bodyType = RigidbodyType2D.Dynamic;
             // Fruit stays under real chute physics until it actually reaches T0.
             // No steering force pulls it from the funnel into the loop lane.
-            body.gravityScale = 1f;
-            body.linearDamping = loopIsFull ? 1.2f : 0.35f;
+            body.gravityScale = loopIsFull ? 1f : 2.1f;
+            body.linearDamping = loopIsFull ? 1.2f : 0.10f;
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
@@ -171,18 +181,14 @@ namespace BubbleFruitLoop.Gameplay
         {
             pathDistance = distance;
             state = FruitState.OnLoop;
-            body.simulated = true;
-            // Keep loop fruit dynamic: colliders contact at the real impact frame.
-            // Path following controls travel while Unity resolves the push.
-            body.bodyType = RigidbodyType2D.Dynamic;
+            // Intake, merge, and conveyor share one render clock and transform owner.
+            // Loop contacts were already ignored by the controller.
+            body.simulated = false;
+            body.bodyType = RigidbodyType2D.Kinematic;
             body.gravityScale = 0f;
-            body.linearDamping = 0.3f;
-            body.angularDamping = 1.15f;
-            body.freezeRotation = false;
-            body.linearVelocity = entryVelocity;
+            body.linearVelocity = Vector2.zero;
             body.angularVelocity = 0f;
-            body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-            body.interpolation = RigidbodyInterpolation2D.Interpolate;
+            body.interpolation = RigidbodyInterpolation2D.None;
         }
 
         public void DisablePhysics()

@@ -5,8 +5,6 @@ namespace BubbleFruitLoop.Gameplay
     [ExecuteAlways]
     public sealed class LoopProgressDisplay : MonoBehaviour
     {
-        private const float CorrectWorldY = 0.49f;
-
         [SerializeField] private EditableFruitLoopController loop;
         [SerializeField] private SpriteRenderer frameRenderer;
         [SerializeField] private SpriteRenderer fillRenderer;
@@ -42,7 +40,6 @@ namespace BubbleFruitLoop.Gameplay
             if (orangeFill != null) orangeFillSprite = orangeFill;
             if (redFill != null) redFillSprite = redFill;
             PrepareCountLabel();
-            AlignInsideLoopBoundary();
             CacheFullFillGeometry();
             Refresh();
         }
@@ -56,10 +53,10 @@ namespace BubbleFruitLoop.Gameplay
                 : null;
             if (inner == null || frameRenderer == null || fillRenderer == null) return;
             Bounds safeArea = inner.bounds;
-            transform.position = new Vector3(safeArea.center.x, CorrectWorldY, transform.position.z);
-            // Width is authored from BoardVisual by the installer/factory. Only
-            // use the inner track to centre the bar; resizing it here made the
-            // previously correct frame unexpectedly tiny.
+            // This is an explicit helper only. Preserve the authored Y position
+            // so artists can place the bar directly in the Scene view.
+            transform.position = new Vector3(
+                safeArea.center.x, transform.position.y, transform.position.z);
         }
 
         private void Awake()
@@ -67,7 +64,6 @@ namespace BubbleFruitLoop.Gameplay
             if (loop == null) loop = FindFirstObjectByType<EditableFruitLoopController>();
             PrepareCountLabel();
             PrepareRoundedFill();
-            AlignInsideLoopBoundary();
             CacheFullFillGeometry();
             Refresh();
         }
@@ -75,6 +71,9 @@ namespace BubbleFruitLoop.Gameplay
         private void Update()
         {
             if (loop == null) loop = FindFirstObjectByType<EditableFruitLoopController>();
+            // In edit mode the Fill transform is authored by hand. Read it every
+            // frame, but never write it back from the preview logic.
+            if (!Application.isPlaying) CacheFullFillGeometry();
             Refresh();
             AdvanceFillColorTransition(Time.deltaTime);
         }
@@ -100,17 +99,6 @@ namespace BubbleFruitLoop.Gameplay
             canvas.renderMode = RenderMode.WorldSpace;
             canvas.overrideSorting = true;
             canvas.sortingOrder = -6;
-
-            RectTransform rect = uiLabel.rectTransform;
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.sizeDelta = new Vector2(260f, 110f);
-            rect.localPosition = new Vector3(0f, 0f, -0.05f);
-            rect.localRotation = Quaternion.identity;
-            rect.localScale = Vector3.one * 0.005f;
-            uiLabel.alignment = TextAlignmentOptions.Center;
-            uiLabel.textWrappingMode = TextWrappingModes.NoWrap;
-            uiLabel.overflowMode = TextOverflowModes.Overflow;
         }
 
         private void CacheFullFillGeometry()
@@ -121,34 +109,12 @@ namespace BubbleFruitLoop.Gameplay
                 greenFillSprite = fillRenderer.sprite;
                 baseFillColor = fillRenderer.color;
             }
-            // Never treat the current fill transform as its full size: at 0/30
-            // that transform is deliberately almost zero and may be serialized
-            // by an editor repair. Reconstruct 100% width from the stable frame.
-            if (frameRenderer != null && frameRenderer.sprite != null)
-            {
-                float frameWidth = frameRenderer.sprite.bounds.size.x
-                    * Mathf.Abs(frameRenderer.transform.localScale.x);
-                // Fill the beige opening closely while retaining only a hairline
-                // gap from the white border at both rounded ends.
-                float horizontalInset = frameWidth * 0.06f;
-                float fillWidth = frameWidth - horizontalInset * 2f;
-                float fillScale = fillWidth / fillRenderer.sprite.bounds.size.x;
-                fullFillScale = new Vector3(fillScale, fillScale * 0.92f, fillScale);
-                float frameLeft = frameRenderer.transform.localPosition.x
-                    + frameRenderer.sprite.bounds.min.x * frameRenderer.transform.localScale.x;
-                fullFillLeftEdge = frameLeft + horizontalInset;
-                fullFillPosition = new Vector3(
-                    fullFillLeftEdge - fillRenderer.sprite.bounds.min.x * fillScale,
-                    -0.005f, fillRenderer.transform.localPosition.z);
-            }
-            else
-            {
-                fullFillScale = fillRenderer.transform.localScale;
-                fullFillPosition = fillRenderer.transform.localPosition;
-                fullFillLeftEdge = fullFillPosition.x
-                    + fillRenderer.sprite.bounds.min.x * fullFillScale.x;
-            }
-            fullFillWidth = fillRenderer.sprite.bounds.size.x * fullFillScale.x;
+            fullFillScale = fillRenderer.transform.localScale;
+            fullFillPosition = fillRenderer.transform.localPosition;
+            fullFillLeftEdge = fullFillPosition.x
+                + fillRenderer.sprite.bounds.min.x * fullFillScale.x;
+            fullFillWidth = Mathf.Abs(
+                fillRenderer.sprite.bounds.size.x * fullFillScale.x);
             EnsureFillMask();
         }
 
@@ -191,8 +157,6 @@ namespace BubbleFruitLoop.Gameplay
             float visibleRatio = Mathf.Max(0.001f, displayedFillRatio);
             if (fillMask != null)
             {
-                fillRenderer.transform.localScale = fullFillScale;
-                fillRenderer.transform.localPosition = fullFillPosition;
                 float maskWidth = fullFillWidth * visibleRatio;
                 fillMask.transform.localPosition = new Vector3(
                     fullFillLeftEdge + maskWidth * 0.5f,

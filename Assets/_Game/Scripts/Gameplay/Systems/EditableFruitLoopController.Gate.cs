@@ -25,7 +25,9 @@ namespace BubbleFruitLoop.Gameplay
             EnsureFullGate();
             if (fullGateCollider == null) return;
             UpdateFullGateTransform();
-            fullGateCollider.enabled = IsFull;
+            // ALWAYS keep the physical floor enabled so fruits don't fall through 
+            // the track when the admission timer delays their entry.
+            fullGateCollider.enabled = true;
         }
 
         private void UpdateFullGateTransform()

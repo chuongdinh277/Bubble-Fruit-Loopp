@@ -15,6 +15,9 @@ namespace BubbleFruitLoop.Gameplay
         private Sprite configuredSprite;
         private float pathDistance;
         private float transientRemaining;
+        private float loopRotationVelocity;
+        private PhysicsMaterial2D originalPhysicsMaterial;
+        private static PhysicsMaterial2D loopFrictionlessMaterial;
 
         public Transform CachedTransform => cachedTransform != null ? cachedTransform : cachedTransform = transform;
         public FruitType Type => type;
@@ -41,6 +44,7 @@ namespace BubbleFruitLoop.Gameplay
             }
         }
         public Collider2D BodyCollider => bodyCollider;
+        public bool IsBodyColliderEnabled => bodyCollider != null && bodyCollider.enabled;
         public Vector2 LinearVelocity => body != null ? body.linearVelocity : Vector2.zero;
         public float PathDistance { get => pathDistance; set => pathDistance = value; }
         public float CurrentSpeed { get; set; }
@@ -50,6 +54,7 @@ namespace BubbleFruitLoop.Gameplay
         private void Awake()
         {
             cachedTransform = transform;
+            if (bodyCollider != null) originalPhysicsMaterial = bodyCollider.sharedMaterial;
             if (visualRenderer is SpriteRenderer spriteRenderer)
                 configuredSprite = spriteRenderer.sprite;
         }
@@ -174,7 +179,7 @@ namespace BubbleFruitLoop.Gameplay
         public void MoveInIntakeQueue(Vector2 target, float moveSpeed)
         {
             if (!body.simulated || body.bodyType != RigidbodyType2D.Kinematic) return;
-            body.MovePosition(Vector2.MoveTowards(body.position, target, moveSpeed * Time.fixedDeltaTime));
+            body.MovePosition(Vector2.MoveTowards(body.position, target, moveSpeed * Time.deltaTime));
         }
 
         public void BeginIntakeDrop()
@@ -235,7 +240,7 @@ namespace BubbleFruitLoop.Gameplay
             // Direct velocity convergence makes all fruit descend at almost the same
             // pace, while MoveTowards still leaves enough softness for wall contacts.
             Vector2 desiredVelocity = flowDirection * targetSpeed;
-            float velocityStep = Mathf.Max(1f, response) * Time.fixedDeltaTime;
+            float velocityStep = Mathf.Max(1f, response) * Time.deltaTime;
             body.linearVelocity = Vector2.MoveTowards(
                 body.linearVelocity, desiredVelocity, velocityStep);
             body.linearVelocity = Vector2.ClampMagnitude(body.linearVelocity, targetSpeed * 1.08f);
@@ -258,26 +263,141 @@ namespace BubbleFruitLoop.Gameplay
             const float lateralDamping = 5.2f;
             Vector2 driveAcceleration = pathDirection
                 * ((targetSpeed - forwardSpeed) * driveResponse);
+            float minimumForwardSpeed = targetSpeed * 0.58f;
+            if (forwardSpeed < minimumForwardSpeed)
+            {
+                // Each fruit owns its conveyor drive. Contact can slow it, but
+                // another fruit is never required to make it start moving.
+                driveAcceleration += pathDirection
+                    * ((minimumForwardSpeed - forwardSpeed) * 16f);
+            }
             Vector2 laneAcceleration = pathNormal
                 * (normalError * centeringStrength - normalSpeed * lateralDamping);
             Vector2 acceleration = Vector2.ClampMagnitude(
-                driveAcceleration + laneAcceleration, 20f);
-            body.AddForce(acceleration * body.mass, ForceMode2D.Force);
+                driveAcceleration + laneAcceleration, 28f);
+            // Normalize force accumulation to a 50 Hz reference while updating
+            // every rendered frame; no loop movement depends on FixedUpdate.
+            float frameForceScale = Time.deltaTime * 50f;
+            body.AddForce(acceleration * body.mass * frameForceScale, ForceMode2D.Force);
 
             float currentSpeed = body.linearVelocity.magnitude;
             if (currentSpeed > maxSpeed)
             {
                 Vector2 excessVelocity = body.linearVelocity.normalized
                     * (currentSpeed - maxSpeed);
-                body.AddForce(-excessVelocity * body.mass * 8f, ForceMode2D.Force);
+                body.AddForce(-excessVelocity * body.mass * 8f * frameForceScale,
+                    ForceMode2D.Force);
             }
+        }
+
+        public void SmoothRotateOnLoop(float targetAngle, float smoothTime, float maxDegreesPerSecond)
+        {
+            if (!body.simulated || body.bodyType != RigidbodyType2D.Dynamic) return;
+            float smoothedAngle = Mathf.SmoothDampAngle(
+                body.rotation,
+                targetAngle,
+                ref loopRotationVelocity,
+                Mathf.Max(0.01f, smoothTime),
+                Mathf.Max(1f, maxDegreesPerSecond),
+                Time.deltaTime);
+            body.MoveRotation(smoothedAngle);
+        }
+
+        public void SetBodyColliderEnabled(bool enabled)
+        {
+            if (bodyCollider != null) bodyCollider.enabled = enabled;
+        }
+
+        public void ApplySoftLoopForce(Vector2 force)
+        {
+            if (!body.simulated || body.bodyType != RigidbodyType2D.Dynamic) return;
+            body.AddForce(force, ForceMode2D.Force);
+        }
+
+        public void SoftMoveToLane(Vector2 target, float response)
+        {
+            if (!body.simulated || body.bodyType != RigidbodyType2D.Dynamic) return;
+            float blend = 1f - Mathf.Exp(-Mathf.Max(0.1f, response) * Time.deltaTime);
+            body.MovePosition(Vector2.Lerp(body.position, target, blend));
+        }
+
+        public float GetWorldCollisionRadius()
+        {
+            if (bodyCollider == null) return 0.2f;
+            Vector3 scale = bodyCollider.transform.lossyScale;
+            float largestScale = Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.y));
+            if (bodyCollider is CircleCollider2D circle)
+                return Mathf.Max(0.05f, circle.radius * largestScale);
+            if (bodyCollider is CapsuleCollider2D capsule)
+                return Mathf.Max(0.05f, Mathf.Max(capsule.size.x, capsule.size.y)
+                    * largestScale * 0.5f);
+            if (bodyCollider is BoxCollider2D box)
+                return Mathf.Max(0.05f, Mathf.Max(box.size.x, box.size.y)
+                    * largestScale * 0.5f);
+            Bounds bounds = bodyCollider.bounds;
+            return Mathf.Max(0.05f, Mathf.Max(bounds.extents.x, bounds.extents.y));
+        }
+
+        public void SmoothVisualRotation(Quaternion targetRotation, float response)
+        {
+            float blend = 1f - Mathf.Exp(-Mathf.Max(0.1f, response) * Time.deltaTime);
+            CachedTransform.rotation = Quaternion.Slerp(
+                CachedTransform.rotation, targetRotation, blend);
+        }
+
+        public void SetSmoothLoopPose(Vector3 position, Quaternion rotation,
+            float rotationResponse)
+        {
+            bool usePhysicsInterpolation = body != null && body.simulated
+                && body.bodyType == RigidbodyType2D.Kinematic;
+            Quaternion currentRotation = usePhysicsInterpolation
+                ? Quaternion.Euler(0f, 0f, body.rotation)
+                : CachedTransform.rotation;
+            float blend = 1f - Mathf.Exp(
+                -Mathf.Max(0.1f, rotationResponse) * Time.deltaTime);
+            Quaternion smoothedRotation = Quaternion.Slerp(
+                currentRotation, rotation, blend);
+            if (usePhysicsInterpolation)
+            {
+                // This method is called from FixedUpdate. MovePosition/Rotation
+                // let Rigidbody2D interpolate the render pose between physics ticks
+                // instead of Transform and Rigidbody repeatedly overwriting each other.
+                body.MovePosition(position);
+                body.MoveRotation(smoothedRotation.eulerAngles.z);
+                return;
+            }
+
+            CachedTransform.position = position;
+            CachedTransform.rotation = smoothedRotation;
+        }
+
+        private void UseLoopFrictionlessMaterial()
+        {
+            if (bodyCollider == null) return;
+            if (loopFrictionlessMaterial == null)
+            {
+                loopFrictionlessMaterial = new PhysicsMaterial2D("Runtime Loop Fruit - Frictionless")
+                {
+                    friction = 0f,
+                    bounciness = 0f,
+                    frictionCombine = PhysicsMaterialCombine2D.Minimum,
+                    bounceCombine = PhysicsMaterialCombine2D.Minimum,
+                    hideFlags = HideFlags.HideAndDontSave
+                };
+            }
+            bodyCollider.sharedMaterial = loopFrictionlessMaterial;
+        }
+
+        private void RestoreOriginalPhysicsMaterial()
+        {
+            if (bodyCollider != null) bodyCollider.sharedMaterial = originalPhysicsMaterial;
         }
 
         // Keep the fruit moving forward while retaining limited sideways contact motion.
         private void MaintainPathForwardVelocity(Vector2 pathDirection, float targetSpeed)
         {
             float currentForwardSpeed = Vector2.Dot(body.linearVelocity, pathDirection);
-            float forwardSpeed = Mathf.MoveTowards(currentForwardSpeed, targetSpeed, 7f * Time.fixedDeltaTime);
+            float forwardSpeed = Mathf.MoveTowards(currentForwardSpeed, targetSpeed, 7f * Time.deltaTime);
 
             // Preserve a limited amount of sideways collision movement while driving the fruit
             // forward at the Inspector's requested speed.
@@ -306,6 +426,7 @@ namespace BubbleFruitLoop.Gameplay
         {
             body.linearVelocity = Vector2.zero;
             body.angularVelocity = 0f;
+            loopRotationVelocity = 0f;
             SetState(FruitState.Pooled);
         }
     }

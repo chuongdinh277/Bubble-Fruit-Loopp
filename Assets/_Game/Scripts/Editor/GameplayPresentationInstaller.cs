@@ -62,6 +62,7 @@ namespace BubbleFruitLoop.Editor
             background.localScale = Vector3.one * (camera.orthographicSize * 2f / backgroundSprite.bounds.size.y);
 
             Transform progress = board.transform.Find("Progress Bar (Inside Board)");
+            bool progressCreated = progress == null;
             if (progress == null)
             {
                 progress = new GameObject("Progress Bar (Inside Board)").transform;
@@ -76,8 +77,9 @@ namespace BubbleFruitLoop.Editor
             SpriteRenderer boardRenderer = board.transform.Find("BoardVisual")?.GetComponent<SpriteRenderer>();
             if (boardRenderer == null) return;
             Bounds boardBounds = boardRenderer.bounds;
-            progress.position = new Vector3(boardBounds.center.x,
-                boardBounds.min.y + boardBounds.size.y * 0.125f, 0f);
+            if (progressCreated)
+                progress.position = new Vector3(boardBounds.center.x,
+                    boardBounds.min.y + boardBounds.size.y * 0.125f, 0f);
 
             SpriteRenderer frameRenderer = ConfigureLayer(progress, "Fill Frame", frameSprite,
                 boardBounds.size.x * 0.62f,
@@ -86,13 +88,13 @@ namespace BubbleFruitLoop.Editor
                 boardBounds.size.x * 0.55f, -7, Vector3.zero, ref changed);
 
             Transform labelTransform = progress.Find("Fruit Count");
+            bool labelCreated = labelTransform == null;
             if (labelTransform == null)
             {
                 labelTransform = new GameObject("Fruit Count").transform;
                 labelTransform.SetParent(progress, false);
                 changed = true;
             }
-            labelTransform.localPosition = new Vector3(0f, 0f, -0.05f);
             TextMeshProUGUI label = labelTransform.GetComponent<TextMeshProUGUI>();
             if (label == null)
             {
@@ -100,11 +102,16 @@ namespace BubbleFruitLoop.Editor
                 if (oldLabel != null) Object.DestroyImmediate(oldLabel);
                 label = labelTransform.gameObject.AddComponent<TextMeshProUGUI>();
                 changed = true;
+                labelCreated = true;
             }
-            label.text = "0/30";
-            label.alignment = TextAlignmentOptions.Center;
-            label.fontSize = 64f;
-            label.color = new Color(0.12f, 0.12f, 0.16f, 1f);
+            if (labelCreated)
+            {
+                labelTransform.localPosition = new Vector3(0f, 0f, -0.05f);
+                label.text = "0/30";
+                label.alignment = TextAlignmentOptions.Center;
+                label.fontSize = 64f;
+                label.color = new Color(0.12f, 0.12f, 0.16f, 1f);
+            }
 
             LoopProgressDisplay display = progress.GetComponent<LoopProgressDisplay>();
             if (display == null)
@@ -114,7 +121,6 @@ namespace BubbleFruitLoop.Editor
             }
             display.Configure(frameRenderer, fillRenderer, label,
                 Object.FindFirstObjectByType<EditableFruitLoopController>(), orangeFillSprite, redFillSprite);
-            display.AlignInsideLoopBoundary();
 
             LowerBoxLayout(boardBounds);
             RemoveRuntimeUiFromScene();
@@ -191,6 +197,7 @@ namespace BubbleFruitLoop.Editor
             int sortingOrder, Vector3 localPosition, ref bool changed)
         {
             Transform layer = parent.Find(name);
+            bool layerCreated = layer == null;
             if (layer == null)
             {
                 layer = new GameObject(name).transform;
@@ -200,8 +207,11 @@ namespace BubbleFruitLoop.Editor
             SpriteRenderer renderer = GetOrAddRenderer(layer.gameObject, ref changed);
             renderer.sprite = sprite;
             renderer.sortingOrder = sortingOrder;
-            layer.localPosition = localPosition;
-            layer.localScale = Vector3.one * (width / sprite.bounds.size.x);
+            if (layerCreated)
+            {
+                layer.localPosition = localPosition;
+                layer.localScale = Vector3.one * (width / sprite.bounds.size.x);
+            }
             return renderer;
         }
 

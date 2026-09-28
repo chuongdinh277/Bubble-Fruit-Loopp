@@ -188,29 +188,23 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0.05
   m_Points:
-  - {x: 0.024525091, y: 0.8811587}
-  - {x: 0.708829, y: 0.8641054}
-  - {x: 1.110223, y: 0.90255815}
-  - {x: 1.3389012, y: 0.8886337}
-  - {x: 1.5137439, y: 0.8609858}
-  - {x: 1.8816215, y: 0.8128939}
-  - {x: 2.032219, y: 0.6565188}
-  - {x: 2.0810683, y: 0.39963627}
-  - {x: 1.8821287, y: 0.14977399}
-  - {x: 1.3431941, y: 0.12689093}
-  - {x: 0.900226, y: 0.13599339}
-  - {x: 0.5353254, y: 0.12764248}
-  - {x: -0.07350494, y: 0.1472078}
-  - {x: -0.75541043, y: 0.16167417}
-  - {x: -1.4671177, y: 0.19665551}
-  - {x: -1.8194815, y: 0.154617}
-  - {x: -2.121372, y: 0.43338776}
-  - {x: -2.0839536, y: 0.7245706}
-  - {x: -1.9317224, y: 0.9118893}
-  - {x: -1.6244782, y: 0.93407863}
-  - {x: -1.1275262, y: 0.90038264}
-  - {x: -0.7076752, y: 0.910726}
-  - {x: -0.009155676, y: 0.8997897}
+  - {x: -0.16856101, y: 0.8530785}
+  - {x: 0.76622397, y: 0.86003006}
+  - {x: 1.6760908, y: 0.88246447}
+  - {x: 1.9939532, y: 0.7410733}
+  - {x: 2.1720135, y: 0.42833897}
+  - {x: 1.9883337, y: 0.1772388}
+  - {x: 1.569669, y: 0.09245634}
+  - {x: 0.666226, y: 0.06731674}
+  - {x: -0.24631052, y: 0.08477464}
+  - {x: -1.0663896, y: 0.060265094}
+  - {x: -1.5209457, y: 0.06534982}
+  - {x: -1.8873816, y: 0.23520336}
+  - {x: -2.0380752, y: 0.52109003}
+  - {x: -1.9380417, y: 0.783602}
+  - {x: -1.6837356, y: 0.8879699}
+  - {x: -0.9113509, y: 0.874855}
+  - {x: -0.23667875, y: 0.8445637}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
@@ -331,7 +325,7 @@ Transform:
   m_GameObject: {fileID: 83611493}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9, y: -0.89, z: 0}
+  m_LocalPosition: {x: -0.9, y: -0.68, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -362,7 +356,7 @@ Transform:
   m_GameObject: {fileID: 101023454}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.41, y: 1.02, z: 0}
+  m_LocalPosition: {x: 2.36, y: 0.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -487,8 +481,8 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0.08
   m_Points:
-  - {x: -3.9809496, y: -2.5949934}
-  - {x: -0.96742123, y: -3.6021743}
+  - {x: -4.038565, y: -2.523348}
+  - {x: -1.0659354, y: -3.593497}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
@@ -518,7 +512,7 @@ Transform:
   m_GameObject: {fileID: 279628100}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.63, y: 0.31, z: 0}
+  m_LocalPosition: {x: 2.66, y: 0.34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -549,7 +543,7 @@ Transform:
   m_GameObject: {fileID: 291435571}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.62, y: -0.635, z: 0}
+  m_LocalPosition: {x: 2.684, y: -0.425, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -657,14 +651,222 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0.08
   m_Points:
-  - {x: 0.8554317, y: -3.6449478}
-  - {x: 0.8717257, y: -3.6449478}
-  - {x: 1.510815, y: -3.4273481}
-  - {x: 3.8827353, y: -2.6197484}
+  - {x: 1.130055, y: -3.6049564}
+  - {x: 4.008326, y: -2.583826}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
+--- !u!213 &384153188
+Sprite:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Runtime Fill Amount Mask
+  m_Rect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  m_Offset: {x: 0, y: 0}
+  m_Border: {x: 0, y: 0, z: 0, w: 0}
+  m_PixelsToUnits: 1
+  m_Pivot: {x: 0.5, y: 0.5}
+  m_Extrude: 0
+  m_IsPolygon: 0
+  m_PackingTag: 
+  m_RenderDataKey:
+    00000000000000000000000000000000: 0
+  m_AtlasTags: []
+  m_SpriteAtlas: {fileID: 0}
+  m_RD:
+    serializedVersion: 3
+    texture: {fileID: 0}
+    alphaTexture: {fileID: 0}
+    secondaryTextures: []
+    m_SubMeshes:
+    - serializedVersion: 2
+      firstByte: 0
+      indexCount: 6
+      topology: 0
+      baseVertex: 0
+      firstVertex: 0
+      vertexCount: 4
+      localAABB:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    m_IndexBuffer: 000001000200020001000300
+    m_VertexData:
+      serializedVersion: 3
+      m_VertexCount: 4
+      m_Channels:
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 3
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 1
+        offset: 0
+        format: 0
+        dimension: 2
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      m_DataSize: 80
+      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf000000000000000000000000000000000000000000000000000000000000000000000000
+    m_Bindpose: []
+    textureRect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 1
+      height: 1
+    textureRectOffset: {x: 0, y: 0}
+    atlasRectOffset: {x: -1, y: -1}
+    settingsRaw: 64
+    uvTransform: {x: 1, y: 0.5, z: 1, w: 0.5}
+    downscaleMultiplier: 1
+  m_AtlasRD:
+    serializedVersion: 3
+    texture: {fileID: 0}
+    alphaTexture: {fileID: 0}
+    secondaryTextures: []
+    m_SubMeshes:
+    - serializedVersion: 2
+      firstByte: 0
+      indexCount: 6
+      topology: 0
+      baseVertex: 0
+      firstVertex: 0
+      vertexCount: 4
+      localAABB:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    m_IndexBuffer: 000001000200020001000300
+    m_VertexData:
+      serializedVersion: 3
+      m_VertexCount: 4
+      m_Channels:
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 3
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 1
+        offset: 0
+        format: 0
+        dimension: 2
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      m_DataSize: 80
+      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf000000000000000000000000000000000000000000000000000000000000000000000000
+    m_Bindpose: []
+    textureRect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 1
+      height: 1
+    textureRectOffset: {x: 0, y: 0}
+    atlasRectOffset: {x: -1, y: -1}
+    settingsRaw: 64
+    uvTransform: {x: 1, y: 0.5, z: 1, w: 0.5}
+    downscaleMultiplier: 1
+  m_PhysicsShape: []
+  m_Bones: []
+  m_ScriptableObjects: []
+  m_SpriteID: 
 --- !u!1 &408556464
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,7 +939,7 @@ Transform:
   m_GameObject: {fileID: 482378252}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 3.91, z: 0}
+  m_LocalPosition: {x: -0.7, y: 4.06, z: 0}
   m_LocalScale: {x: 0.17, y: 0.17, z: 0.17}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -863,7 +1065,7 @@ Transform:
   m_GameObject: {fileID: 499066711}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.115, y: -0.90999997, z: 0}
+  m_LocalPosition: {x: 1.115, y: -0.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -897,7 +1099,7 @@ Transform:
   m_GameObject: {fileID: 511856110}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.25, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -934,12 +1136,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.EditableFruitLoopController
   pathAuthoring: {fileID: 511856113}
   loopStart: {fileID: 1832421730}
-  waterfallStartPoint: {fileID: 0}
+  laneStartPoint: {fileID: 0}
   entryZoneWidth: 1.45
   entryZoneHeight: 1.35
+  admissionCheckInterval: 0.07
   admissionRadius: 0.42
-  intakeFlightSpeed: 4.8
-  intakeLaunchInterval: 0.08
+  fastAdmissionInterval: 0.035
+  intakeFlightSpeed: 6.2
+  intakeHopHeight: 0.16
   fullGateWidth: 1.25
   fullGateHeight: 0.18
   fullGateYOffset: 0.22
@@ -947,7 +1151,8 @@ MonoBehaviour:
   maxComfortableLoopSpeed: 3.1
   laneCenteringStrength: 16
   physicalLoopMaxSpeed: 4.1
-  minimumFruitGap: 0.06
+  loopRotationSmoothTime: 0.14
+  loopMaxRotationSpeed: 540
   laneMergeDuration: 0.18
   laneMergeAdvance: 0.46
 --- !u!114 &511856113
@@ -979,8 +1184,6 @@ MonoBehaviour:
   - {fileID: 1009953777}
   - {fileID: 592795195}
   - {fileID: 1314527332}
-  - {fileID: 0}
-  - {fileID: 0}
   pathColor: {r: 0.2, g: 1, b: 0.55, a: 0.9}
   pointRadius: 0.13
   autoFitBoundaries: 0
@@ -1045,7 +1248,7 @@ Transform:
   m_GameObject: {fileID: 592795194}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.79, y: 1.32, z: 0}
+  m_LocalPosition: {x: -1.81, y: 1.33, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1119,7 +1322,7 @@ Transform:
   m_GameObject: {fileID: 632481747}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.39, y: -0.35, z: 0}
+  m_LocalPosition: {x: 1.56, y: -0.31, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1205,7 +1408,7 @@ SpriteMask:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 2077012722}
+  m_Sprite: {fileID: 384153188}
   m_MaskAlphaCutoff: 0.2
   m_FrontSortingLayerID: 0
   m_BackSortingLayerID: 0
@@ -1457,7 +1660,7 @@ Transform:
   m_GameObject: {fileID: 764689773}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.08, y: 1.24, z: 0}
+  m_LocalPosition: {x: -0.04, y: 1.161, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1489,8 +1692,8 @@ Transform:
   m_GameObject: {fileID: 800400642}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.28, z: 0}
-  m_LocalScale: {x: 0.92, y: 1, z: 1}
+  m_LocalPosition: {x: 0.066969156, y: 0.49, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1740639715}
@@ -1544,7 +1747,7 @@ Transform:
   m_GameObject: {fileID: 884710834}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.63, y: 1.21, z: 0}
+  m_LocalPosition: {x: 1.57, y: 1.155, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1577,7 +1780,7 @@ Transform:
   m_GameObject: {fileID: 899311199}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7, y: 3.91, z: 0}
+  m_LocalPosition: {x: 0.7, y: 4.06, z: 0}
   m_LocalScale: {x: 0.17, y: 0.17, z: 0.17}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1703,7 +1906,7 @@ Transform:
   m_GameObject: {fileID: 909668671}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.20999998, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1830,7 +2033,7 @@ Transform:
   m_GameObject: {fileID: 937620292}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.45, y: 3.91, z: 0}
+  m_LocalPosition: {x: 3.45, y: 4.06, z: 0}
   m_LocalScale: {x: 0.17, y: 0.17, z: 0.17}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1957,8 +2160,8 @@ Transform:
   m_GameObject: {fileID: 996545663}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.5099998, z: 0}
-  m_LocalScale: {x: 2.26, y: 2.22, z: 2.3161764}
+  m_LocalPosition: {x: 0, y: 5.72, z: 0}
+  m_LocalScale: {x: 2.28, y: 2.22, z: 2.3161764}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 606850946}
@@ -2049,7 +2252,7 @@ Transform:
   m_GameObject: {fileID: 1008220675}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.05, y: 3.91, z: 0}
+  m_LocalPosition: {x: -2.05, y: 4.06, z: 0}
   m_LocalScale: {x: 0.17, y: 0.17, z: 0.17}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2175,7 +2378,7 @@ Transform:
   m_GameObject: {fileID: 1009953776}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.392, y: 1.128, z: 0}
+  m_LocalPosition: {x: -2.45, y: 1.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2206,7 +2409,7 @@ Transform:
   m_GameObject: {fileID: 1176452144}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.63, y: 0.65, z: 0}
+  m_LocalPosition: {x: -2.76, y: 0.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2328,7 +2531,7 @@ Transform:
   m_GameObject: {fileID: 1206961472}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.39, y: -0.36, z: 0}
+  m_LocalPosition: {x: -0.21, y: -0.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2359,7 +2562,7 @@ Transform:
   m_GameObject: {fileID: 1286997404}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.20999998, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2390,7 +2593,7 @@ Transform:
   m_GameObject: {fileID: 1314527331}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.86, y: 1.33, z: 0}
+  m_LocalPosition: {x: -0.89, y: 1.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2421,7 +2624,7 @@ Transform:
   m_GameObject: {fileID: 1366676527}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.13, y: -0.27, z: 0}
+  m_LocalPosition: {x: -1.94, y: -0.41, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2452,7 +2655,7 @@ Transform:
   m_GameObject: {fileID: 1370606839}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.37, y: -0.26, z: 0}
+  m_LocalPosition: {x: 2.26, y: -0.17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2485,7 +2688,7 @@ Transform:
   m_GameObject: {fileID: 1401159536}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.05, y: 3.91, z: 0}
+  m_LocalPosition: {x: 2.05, y: 4.06, z: 0}
   m_LocalScale: {x: 0.17, y: 0.17, z: 0.17}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2611,7 +2814,7 @@ Transform:
   m_GameObject: {fileID: 1478012304}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.58, y: 0.18, z: 0}
+  m_LocalPosition: {x: -2.64, y: -0.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2642,7 +2845,7 @@ Transform:
   m_GameObject: {fileID: 1520014339}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.47, y: -0.34, z: 0}
+  m_LocalPosition: {x: 0.71, y: -0.32, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2717,8 +2920,7 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0.08
   m_Points:
-  - {x: -4.0524235, y: -0.89024985}
-  - {x: -4.020055, y: 27.831549}
+  - {x: -4.024405, y: -1.0046989}
   - {x: -4.0976386, y: 27.501371}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
@@ -2847,7 +3049,7 @@ Transform:
   m_GameObject: {fileID: 1686166380}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.47999996, z: 0}
+  m_LocalPosition: {x: 0, y: -0.26999998, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3023,33 +3225,33 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0.05
   m_Points:
-  - {x: 0.08926449, y: 1.7092068}
-  - {x: 1.0100853, y: 1.6654818}
-  - {x: 1.7261894, y: 1.6664674}
-  - {x: 2.1238117, y: 1.6535506}
-  - {x: 2.539838, y: 1.4779415}
-  - {x: 2.8201876, y: 1.1768105}
-  - {x: 3.0308948, y: 0.64404345}
-  - {x: 3.0943992, y: 0.16765767}
-  - {x: 2.8906343, y: -0.101169884}
-  - {x: 2.5979745, y: -0.46094486}
-  - {x: 2.1557527, y: -0.6894973}
-  - {x: 1.5634997, y: -0.6934199}
-  - {x: 0.9574237, y: -0.7143076}
-  - {x: 0.13181144, y: -0.7285896}
-  - {x: -0.72021693, y: -0.71801996}
-  - {x: -1.4423757, y: -0.717564}
-  - {x: -2.2004538, y: -0.70632845}
-  - {x: -2.6053312, y: -0.52363145}
-  - {x: -2.8695788, y: -0.18932939}
-  - {x: -2.989683, y: 0.08148964}
-  - {x: -3.025255, y: 0.3708156}
-  - {x: -2.9768388, y: 0.7566997}
-  - {x: -2.7875433, y: 1.1713125}
-  - {x: -2.3933504, y: 1.5260053}
-  - {x: -1.8041033, y: 1.6426034}
-  - {x: -1.0635073, y: 1.6664157}
-  - {x: 0.027127862, y: 1.6784124}
+  - {x: 0.011928543, y: 1.6619662}
+  - {x: 0.8385263, y: 1.7112501}
+  - {x: 1.7358292, y: 1.6886891}
+  - {x: 2.2578068, y: 1.675809}
+  - {x: 2.648483, y: 1.4458591}
+  - {x: 2.9397228, y: 1.1967148}
+  - {x: 3.1565013, y: 0.74551475}
+  - {x: 3.1173573, y: 0.06434655}
+  - {x: 2.970988, y: -0.21595964}
+  - {x: 2.6064744, y: -0.6168309}
+  - {x: 2.2995715, y: -0.73364687}
+  - {x: 1.8057727, y: -0.7635447}
+  - {x: 1.0347595, y: -0.7669196}
+  - {x: 0.16689925, y: -0.7444054}
+  - {x: -0.9364528, y: -0.7883696}
+  - {x: -1.4623168, y: -0.7805357}
+  - {x: -2.0540462, y: -0.7587314}
+  - {x: -2.4821162, y: -0.67892873}
+  - {x: -2.9499316, y: -0.28116116}
+  - {x: -3.1557968, y: 0.105624825}
+  - {x: -3.1847093, y: 0.6172457}
+  - {x: -2.996117, y: 1.1154172}
+  - {x: -2.7228634, y: 1.4623336}
+  - {x: -2.2308419, y: 1.6901684}
+  - {x: -1.8198135, y: 1.6811235}
+  - {x: -0.83459014, y: 1.7164149}
+  - {x: -0.06470394, y: 1.6619662}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
@@ -3079,7 +3281,7 @@ Transform:
   m_GameObject: {fileID: 1798449574}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.72, y: 1.23, z: 0}
+  m_LocalPosition: {x: 0.73, y: 1.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3110,7 +3312,7 @@ Transform:
   m_GameObject: {fileID: 1799124986}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.02, y: 1.2, z: 0}
+  m_LocalPosition: {x: -0.02, y: 1.37, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3141,7 +3343,7 @@ Transform:
   m_GameObject: {fileID: 1832421729}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.01, y: 1.19, z: 0}
+  m_LocalPosition: {x: 0, y: 2.21, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3174,7 +3376,7 @@ Transform:
   m_GameObject: {fileID: 1881946767}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.45, y: 3.91, z: 0}
+  m_LocalPosition: {x: -3.45, y: 4.06, z: 0}
   m_LocalScale: {x: 0.17, y: 0.17, z: 0.17}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -3404,8 +3606,8 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0.08
   m_Points:
-  - {x: 3.8701782, y: 30.116264}
-  - {x: 4.0307684, y: -1.001634}
+  - {x: 3.9635124, y: 29.946335}
+  - {x: 4.0685267, y: -0.94933355}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
@@ -3479,7 +3681,7 @@ Transform:
   m_GameObject: {fileID: 2024904922}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.23, y: -0.39, z: 0}
+  m_LocalPosition: {x: -1.06, y: -0.47, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3514,7 +3716,7 @@ RectTransform:
   m_GameObject: {fileID: 2045403115}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.05}
-  m_LocalScale: {x: 0.0065, y: 0.0065, z: 0.0065}
+  m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 800400643}
@@ -3625,8 +3827,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4280885023
+  m_fontColor: {r: 0.12, g: 0.12, b: 0.16, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3643,8 +3845,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 65
-  m_fontSizeBase: 65
+  m_fontSize: 64
+  m_fontSizeBase: 64
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3696,216 +3898,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2045403115}
   m_CullTransparentMesh: 1
---- !u!213 &2077012722
-Sprite:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Runtime Fill Amount Mask
-  m_Rect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  m_Offset: {x: 0, y: 0}
-  m_Border: {x: 0, y: 0, z: 0, w: 0}
-  m_PixelsToUnits: 1
-  m_Pivot: {x: 0.5, y: 0.5}
-  m_Extrude: 0
-  m_IsPolygon: 0
-  m_PackingTag: 
-  m_RenderDataKey:
-    00000000000000000000000000000000: 0
-  m_AtlasTags: []
-  m_SpriteAtlas: {fileID: 0}
-  m_RD:
-    serializedVersion: 3
-    texture: {fileID: 0}
-    alphaTexture: {fileID: 0}
-    secondaryTextures: []
-    m_SubMeshes:
-    - serializedVersion: 2
-      firstByte: 0
-      indexCount: 6
-      topology: 0
-      baseVertex: 0
-      firstVertex: 0
-      vertexCount: 4
-      localAABB:
-        m_Center: {x: 0, y: 0, z: 0}
-        m_Extent: {x: 0, y: 0, z: 0}
-    m_IndexBuffer: 000001000200020001000300
-    m_VertexData:
-      serializedVersion: 3
-      m_VertexCount: 4
-      m_Channels:
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 3
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 1
-        offset: 0
-        format: 0
-        dimension: 2
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      m_DataSize: 80
-      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf000000000000000000000000000000000000000000000000000000000000000000000000
-    m_Bindpose: []
-    textureRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 1
-      height: 1
-    textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: -1, y: -1}
-    settingsRaw: 64
-    uvTransform: {x: 1, y: 0.5, z: 1, w: 0.5}
-    downscaleMultiplier: 1
-  m_AtlasRD:
-    serializedVersion: 3
-    texture: {fileID: 0}
-    alphaTexture: {fileID: 0}
-    secondaryTextures: []
-    m_SubMeshes:
-    - serializedVersion: 2
-      firstByte: 0
-      indexCount: 6
-      topology: 0
-      baseVertex: 0
-      firstVertex: 0
-      vertexCount: 4
-      localAABB:
-        m_Center: {x: 0, y: 0, z: 0}
-        m_Extent: {x: 0, y: 0, z: 0}
-    m_IndexBuffer: 000001000200020001000300
-    m_VertexData:
-      serializedVersion: 3
-      m_VertexCount: 4
-      m_Channels:
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 3
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 1
-        offset: 0
-        format: 0
-        dimension: 2
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      - stream: 0
-        offset: 0
-        format: 0
-        dimension: 0
-      m_DataSize: 80
-      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf000000000000000000000000000000000000000000000000000000000000000000000000
-    m_Bindpose: []
-    textureRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 1
-      height: 1
-    textureRectOffset: {x: 0, y: 0}
-    atlasRectOffset: {x: -1, y: -1}
-    settingsRaw: 64
-    uvTransform: {x: 1, y: 0.5, z: 1, w: 0.5}
-    downscaleMultiplier: 1
-  m_PhysicsShape: []
-  m_Bones: []
-  m_ScriptableObjects: []
-  m_SpriteID: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

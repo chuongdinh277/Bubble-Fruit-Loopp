@@ -247,16 +247,5 @@ namespace BubbleFruitLoop.Gameplay
             return -1;
         }
 
-        private bool ReachedPickup(float previous, float current, float pickup)
-        {
-            if (Crossed(previous, current, pickup)) return true;
-            float length = loop.PathLength;
-            if (length <= 0f) return false;
-            float separation = Mathf.Min(
-                Mathf.Repeat(current - pickup, length),
-                Mathf.Repeat(pickup - current, length));
-            return separation <= PickupCatchDistance;
-        }
-
     }
 }
