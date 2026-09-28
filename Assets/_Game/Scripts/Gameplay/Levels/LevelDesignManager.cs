@@ -80,11 +80,13 @@ namespace BubbleFruitLoop.Editor
 
             private void OnFruitsChanged()
             {
+#if UNITY_EDITOR
                 if (manager != null)
                 {
                     bubbleScale = manager.CalculateBubbleScale(fruits != null ? fruits.Count : 0);
                     manager.UpdateBubbleVisuals(this);
                 }
+#endif
             }
 
             private void OnScaleChanged()
@@ -119,7 +121,9 @@ namespace BubbleFruitLoop.Editor
 
             private void OnBoxChanged()
             {
+#if UNITY_EDITOR
                 if (manager != null) manager.UpdateBoxVisuals(this);
+#endif
             }
         }
 

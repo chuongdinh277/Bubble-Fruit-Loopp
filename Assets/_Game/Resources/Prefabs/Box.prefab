@@ -100,12 +100,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7795237721580008670}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a32ffc19a9946e94ea7f201ac4e219ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f8c017faa42f3a4fa6dd461a81b25ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxRuntime
-  visualRenderer: {fileID: 2031407745396784184}
-  acceptedType: 0
-  state: 0
-  capacity: 0
-  current: 0
-  reserved: 0
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxView
+  boxRenderer: {fileID: 2031407745396784184}
+  editorFruitType: 0
+  editorCapacity: 4

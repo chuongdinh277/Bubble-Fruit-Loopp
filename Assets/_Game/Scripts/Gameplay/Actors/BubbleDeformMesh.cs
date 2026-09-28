@@ -6,7 +6,7 @@ namespace BubbleFruitLoop.Gameplay
     public sealed class BubbleDeformMesh : MonoBehaviour
     {
         [SerializeField] private MeshFilter meshFilter;
-        [SerializeField] private int segmentCount = 32;
+        [SerializeField] private int segmentCount = 64;
         [SerializeField] private float radius = 2.55f;
         [SerializeField] private float strength = 0.075f;
         [SerializeField] private float speed = 1.1f;
@@ -24,7 +24,7 @@ namespace BubbleFruitLoop.Gameplay
             float deformSpeed, float phaseOffset)
         {
             meshFilter = filter;
-            segmentCount = Mathf.Max(24, segments);
+            segmentCount = Mathf.Max(64, segments);
             radius = baseRadius;
             strength = deformStrength;
             speed = deformSpeed;
@@ -48,7 +48,7 @@ namespace BubbleFruitLoop.Gameplay
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            segmentCount = Mathf.Max(24, segmentCount);
+            segmentCount = Mathf.Max(64, segmentCount);
             if (!isActiveAndEnabled || meshFilter == null) return;
             BuildMesh();
         }
@@ -110,6 +110,7 @@ namespace BubbleFruitLoop.Gameplay
         private void BuildMesh()
         {
             if (meshFilter == null) return;
+            segmentCount = Mathf.Max(64, segmentCount);
             if (mesh == null)
             {
                 mesh = new Mesh

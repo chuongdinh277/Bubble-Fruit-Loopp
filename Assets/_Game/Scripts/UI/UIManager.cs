@@ -65,6 +65,9 @@ namespace BubbleFruitLoop.UI
                 
                 Transform parent = CanvasParent != null ? CanvasParent : transform;
                 T instance = Instantiate(prefab, parent);
+                if (instance.GetComponent<Canvas>() != null
+                    && instance.GetComponent<ResponsiveCanvasLayout>() == null)
+                    instance.gameObject.AddComponent<ResponsiveCanvasLayout>();
                 uiCanvases[typeof(T)] = instance;
             }
             return uiCanvases[typeof(T)] as T;

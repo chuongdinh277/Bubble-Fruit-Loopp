@@ -2603,15 +2603,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 489942172}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a32ffc19a9946e94ea7f201ac4e219ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f8c017faa42f3a4fa6dd461a81b25ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxRuntime
-  visualRenderer: {fileID: 489942175}
-  acceptedType: 1
-  state: 0
-  capacity: 4
-  current: 0
-  reserved: 0
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxView
+  boxRenderer: {fileID: 489942175}
+  editorFruitType: 1
+  editorCapacity: 4
 --- !u!23 &489942175
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4591,15 +4588,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 806669678}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a32ffc19a9946e94ea7f201ac4e219ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f8c017faa42f3a4fa6dd461a81b25ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxRuntime
-  visualRenderer: {fileID: 806669681}
-  acceptedType: 0
-  state: 0
-  capacity: 4
-  current: 0
-  reserved: 0
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxView
+  boxRenderer: {fileID: 806669681}
+  editorFruitType: 0
+  editorCapacity: 4
 --- !u!23 &806669681
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5361,15 +5355,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 898277240}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a32ffc19a9946e94ea7f201ac4e219ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f8c017faa42f3a4fa6dd461a81b25ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxRuntime
-  visualRenderer: {fileID: 898277243}
-  acceptedType: 2
-  state: 0
-  capacity: 4
-  current: 0
-  reserved: 0
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxView
+  boxRenderer: {fileID: 898277243}
+  editorFruitType: 2
+  editorCapacity: 4
 --- !u!23 &898277243
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7400,15 +7391,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1302536021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a32ffc19a9946e94ea7f201ac4e219ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f8c017faa42f3a4fa6dd461a81b25ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxRuntime
-  visualRenderer: {fileID: 1302536024}
-  acceptedType: 1
-  state: 0
-  capacity: 4
-  current: 0
-  reserved: 0
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxView
+  boxRenderer: {fileID: 1302536024}
+  editorFruitType: 1
+  editorCapacity: 4
 --- !u!23 &1302536024
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8225,15 +8213,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1421254360}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a32ffc19a9946e94ea7f201ac4e219ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f8c017faa42f3a4fa6dd461a81b25ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxRuntime
-  visualRenderer: {fileID: 1421254362}
-  acceptedType: 3
-  state: 0
-  capacity: 4
-  current: 0
-  reserved: 0
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxView
+  boxRenderer: {fileID: 1421254362}
+  editorFruitType: 3
+  editorCapacity: 4
 --- !u!23 &1421254362
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10333,15 +10318,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1896570051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a32ffc19a9946e94ea7f201ac4e219ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f8c017faa42f3a4fa6dd461a81b25ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxRuntime
-  visualRenderer: {fileID: 1896570053}
-  acceptedType: 2
-  state: 0
-  capacity: 4
-  current: 0
-  reserved: 0
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxView
+  boxRenderer: {fileID: 1896570053}
+  editorFruitType: 2
+  editorCapacity: 4
 --- !u!1 &1902943442
 GameObject:
   m_ObjectHideFlags: 0
@@ -11905,9 +11887,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a32ffc19a9946e94ea7f201ac4e219ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f8c017faa42f3a4fa6dd461a81b25ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxRuntime
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxView
 --- !u!4 &6778960418353650997 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 43607547920365698, guid: 381b201729a261e4e94d26592199c8e7, type: 3}

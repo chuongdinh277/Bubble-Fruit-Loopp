@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using BubbleFruitLoop.Pooling;
+using BubbleFruitLoop.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -166,6 +167,7 @@ namespace BubbleFruitLoop.Gameplay
             {
                 if (Camera.main == null) return;
                 Vector3 screenPos = Pointer.current.position.ReadValue();
+                if (UICanvasGameSetting.IsGameplayTapBlocked(screenPos)) return;
                 Vector2 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
                 if (ObstacleCollider != null && ObstacleCollider.OverlapPoint(worldPos))
                 {

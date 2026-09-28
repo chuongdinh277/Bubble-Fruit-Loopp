@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using BubbleFruitLoop.Core;
 
 namespace BubbleFruitLoop.Managers
@@ -62,14 +63,17 @@ namespace BubbleFruitLoop.Managers
             fxSource.volume = fxVolume;
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
-            Invoke(nameof(OnLoad), 0.5f);
+            // Loading freezes gameplay time; audio startup uses real time.
+            yield return new WaitForSecondsRealtime(0.5f);
+            OnLoad();
         }
 
         private void OnLoad()
         {
             isLoaded = true;
+            OnSettingsChanged();
             if (playBgmOnStart) PlayBGM(startupBgm);
         }
 
@@ -78,6 +82,7 @@ namespace BubbleFruitLoop.Managers
             int index = (int)id;
             if (bgmClips == null || index < 0 || index >= bgmClips.Length || bgmClips[index] == null)
             {
+                Debug.LogWarning($"Missing BGM clip: {id}", this);
                 bgmSource.Stop();
                 return;
             }
@@ -130,12 +135,18 @@ namespace BubbleFruitLoop.Managers
 
             if (bgmClips == null || bgmClips.Length < 2)
                 bgmClips = new[] { music, music };
-            if (fxClips != null && fxClips.Length >= 8) return;
-            fxClips = new[]
+            for (int index = 0; index < bgmClips.Length; index++)
+                if (bgmClips[index] == null) bgmClips[index] = music;
+            AudioClip[] defaults = new[]
             {
                 pickup, pickup, pickup, pickup, pickup,
                 booster, booster, booster
             };
+            if (fxClips == null || fxClips.Length < defaults.Length)
+                fxClips = defaults;
+            else
+                for (int index = 0; index < defaults.Length; index++)
+                    if (fxClips[index] == null) fxClips[index] = defaults[index];
         }
 
         private bool IsMusicOn()

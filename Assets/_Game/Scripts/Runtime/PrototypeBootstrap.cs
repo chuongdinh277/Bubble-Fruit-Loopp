@@ -212,6 +212,7 @@ namespace BubbleFruitLoop.Runtime
             Pointer pointer = Pointer.current;
             if (pointer == null || !pointer.press.wasPressedThisFrame) return;
             Vector3 screenPosition = pointer.position.ReadValue();
+            if (UICanvasGameSetting.IsGameplayTapBlocked(screenPosition)) return;
             Vector3 worldPosition = gameplayCamera.ScreenToWorldPoint(screenPosition);
             Collider2D[] hits = Physics2D.OverlapPointAll(worldPosition);
             for (int i = 0; i < hits.Length; i++)

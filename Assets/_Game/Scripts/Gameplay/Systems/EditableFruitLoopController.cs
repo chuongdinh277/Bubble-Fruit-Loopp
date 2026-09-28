@@ -15,6 +15,16 @@ namespace BubbleFruitLoop.Gameplay
             public float MergeElapsed;
             public float MergeTargetDistance;
             public float MergeDuration;
+            public float EntryLift;
+            public float VerticalOffset;
+            public float VerticalVelocity;
+            public float SpacingPushSpeed;
+            public float SpacingPushAcceleration;
+            public Vector2 WallOffset;
+            public Vector2 WallOffsetVelocity;
+            public float RollAngle;
+            public float RollSpeed;
+            public float RollSpeedFactor;
         }
 
         private sealed class IntakeFlight
@@ -40,6 +50,7 @@ namespace BubbleFruitLoop.Gameplay
         [Header("Waterfall Intake")]
         [SerializeField, Range(2f, 12f)] private float intakeFlightSpeed = 7.2f;
         [SerializeField, Min(0.04f)] private float intakeLaunchInterval = 0.04f;
+        [SerializeField, Range(0.1f, 0.3f)] private float intakeFallSmoothDuration = 0.20f;
 
         [Header("Full Loop Gate")]
         [SerializeField, Min(0.2f)] private float fullGateWidth = 1.25f;
@@ -47,21 +58,30 @@ namespace BubbleFruitLoop.Gameplay
         [SerializeField] private float fullGateYOffset = 0.22f;
 
         [Header("Stable Loop")]
-        [SerializeField, Min(0.1f)] private float speed = 6.5f;
-        [SerializeField, Min(0.1f)] private float maxComfortableLoopSpeed = 6.5f;
+        [SerializeField, Min(0.1f)] private float speed = 5.0f;
+        [SerializeField, Min(0.1f)] private float maxComfortableLoopSpeed = 5.0f;
         [SerializeField, Range(2f, 30f)] private float laneCenteringStrength = 22f;
         [SerializeField, Range(1f, 8f)] private float physicalLoopMaxSpeed = 5.8f;
 
         [Header("Fruit Spacing")]
         [SerializeField, Min(0.01f)] private float minimumFruitGap = 0.06f;
+        [SerializeField, Range(0.04f, 0.3f)] private float spacingSmoothTime = 0.065f;
+        [SerializeField, Range(0.1f, 0.5f)] private float maxSpacingPushSpeedRatio = 0.48f;
+
+        [Header("Gentle Fruit Rolling")]
+        [SerializeField, Range(0f, 45f)] private float fruitRollDegreesPerSecond = 20f;
 
         [Header("P00 Lane Merge")]
-        [SerializeField, Range(0.08f, 0.4f)] private float laneMergeDuration = 0.09f;
+        [SerializeField, Range(0.08f, 0.4f)] private float laneMergeDuration = 0.20f;
         [SerializeField, Range(0.1f, 1f)] private float laneMergeAdvance = 0.46f;
+        [SerializeField, Range(0.05f, 0.25f)] private float entryLiftHeight = 0.16f;
+        [SerializeField, Range(0.02f, 0.15f)] private float entryPressDepth = 0.09f;
+        [SerializeField, Range(0.05f, 0.3f)] private float entryPressureSmoothTime = 0.10f;
 
         private readonly List<FruitActor> congestion = new(24);
         private readonly List<LoopFruit> active = new(35);
         private readonly List<LoopFruit> stableFruits = new(35);
+        private readonly List<LoopFruit> spacingFruits = new(35);
         private readonly HashSet<FruitActor> owned = new();
         private readonly Dictionary<FruitActor, IntakeFlight> intakeFlights = new();
         private LoopPathCache path;
@@ -102,8 +122,11 @@ namespace BubbleFruitLoop.Gameplay
             // Keep current scene files compatible with the latest movement tuning.
             // This avoids having to rewrite an open .unity file just to update speed.
             // Upgrade the slower values serialized in existing scenes.
-            speed = Mathf.Max(6.5f, speed);
-            maxComfortableLoopSpeed = Mathf.Max(6.5f, maxComfortableLoopSpeed);
+            speed = Mathf.Max(5.0f, speed);
+            maxComfortableLoopSpeed = Mathf.Max(5.0f, maxComfortableLoopSpeed);
+            // Apply faster, still eased separation to existing serialized scenes.
+            spacingSmoothTime = Mathf.Clamp(spacingSmoothTime, 0.04f, 0.065f);
+            maxSpacingPushSpeedRatio = Mathf.Clamp(maxSpacingPushSpeedRatio, 0.48f, 0.5f);
             laneCenteringStrength = Mathf.Clamp(laneCenteringStrength, 18f, 26f);
             physicalLoopMaxSpeed = Mathf.Clamp(physicalLoopMaxSpeed, 5.2f, 6.4f);
             // This zone tracks fruit at the chute outlet. Fruit above it keep
@@ -112,7 +135,8 @@ namespace BubbleFruitLoop.Gameplay
             entryZoneHeight = Mathf.Clamp(entryZoneHeight, 0.8f, 1.35f);
             intakeFlightSpeed = Mathf.Clamp(intakeFlightSpeed, 7.2f, 10f);
             intakeLaunchInterval = Mathf.Clamp(intakeLaunchInterval, 0.04f, 0.05f);
-            laneMergeDuration = Mathf.Clamp(laneMergeDuration, 0.08f, 0.10f);
+            intakeFallSmoothDuration = Mathf.Clamp(intakeFallSmoothDuration, 0.20f, 0.3f);
+            laneMergeDuration = Mathf.Clamp(laneMergeDuration, 0.18f, 0.24f);
             laneMergeAdvance = Mathf.Clamp(laneMergeAdvance, 0.36f, 0.58f);
         }
 
@@ -146,12 +170,11 @@ namespace BubbleFruitLoop.Gameplay
                     out Vector3 targetPosition, out Quaternion targetRotation);
                 Vector2 endTangent = ((Vector2)(targetRotation * Vector3.up)).normalized;
                 Vector2 startTangent = item.MergeStartVelocity * item.MergeDuration;
-                if (startTangent.sqrMagnitude < 0.0025f)
-                    startTangent = endTangent * (laneSpeed * item.MergeDuration * 0.2f);
                 Vector2 finishTangent = endTangent * laneSpeed * item.MergeDuration;
                 fruit.CachedTransform.position = HermitePosition(
                     item.MergeStartPosition, targetPosition,
-                    startTangent, finishTangent, progress);
+                    startTangent, finishTangent, progress)
+                    + Vector2.up * (entryLiftHeight * Mathf.SmoothStep(0f, 1f, progress));
                 float smoothProgress = Mathf.SmoothStep(0f, 1f, progress);
                 fruit.CachedTransform.rotation = Quaternion.Slerp(
                     item.MergeStartRotation, targetRotation, smoothProgress);
@@ -161,7 +184,9 @@ namespace BubbleFruitLoop.Gameplay
                     item.MergeTargetDistance + laneSpeed * overflow, path.Length);
                 path.Evaluate(completedDistance, out Vector3 completedPosition,
                     out Quaternion completedRotation);
-                fruit.CachedTransform.position = completedPosition;
+                item.EntryLift = entryLiftHeight;
+                item.VerticalOffset = entryLiftHeight;
+                fruit.CachedTransform.position = completedPosition + Vector3.up * entryLiftHeight;
                 Vector2 tangent = completedRotation * Vector3.up;
                 fruit.CurrentSpeed = laneSpeed;
                 fruit.SetBodyColliderEnabled(true);
@@ -199,13 +224,12 @@ namespace BubbleFruitLoop.Gameplay
                 if (fruit == null) { arrivedFruits.Add(fruit); continue; }
                 flight.Elapsed += Time.deltaTime;
                 float progress = Mathf.Clamp01(flight.Elapsed / flight.Duration);
-                fruit.CachedTransform.position = HermitePosition(
+                fruit.CachedTransform.position = SmoothWaterfallPosition(
                     flight.StartPosition, flight.LandingPosition,
-                    flight.StartVelocity * flight.Duration,
-                    flight.ArrivalVelocity * flight.Duration, progress);
+                    flight.StartVelocity, flight.ArrivalVelocity, flight.Duration, progress);
                 if (flight.Elapsed >= flight.Duration) arrivedFruits.Add(fruit);
             }
-            // Every reserved arrival immediately joins the lane at P00.
+            // Arrivals keep moving into an upper layer while the lane yields below.
             for (int index = 0; index < arrivedFruits.Count; index++)
             {
                 FruitActor fruit = arrivedFruits[index];
@@ -312,8 +336,8 @@ namespace BubbleFruitLoop.Gameplay
         {
             Vector2 start = fruit.CachedTransform.position;
             Vector2 landing = GetWaterfallStartPosition();
-            float travelTime = Mathf.Max(0.08f,
-                Vector2.Distance(start, landing) / Mathf.Max(0.1f, intakeFlightSpeed));
+            float travelTime = Mathf.Max(intakeFallSmoothDuration,
+                Vector2.Distance(start, landing) * 1.5f / Mathf.Max(0.1f, intakeFlightSpeed));
             // Do not extend flights to wait for earlier arrivals or a lane gap.
             intakeLaunchTimer = intakeLaunchInterval;
             return new IntakeFlight
@@ -321,10 +345,51 @@ namespace BubbleFruitLoop.Gameplay
                 StartPosition = start,
                 LandingPosition = landing,
                 StartVelocity = fruit.LinearVelocity,
+                ArrivalVelocity = GetWaterfallArrivalVelocity(start, landing, travelTime,
+                    Mathf.Min(speed, maxComfortableLoopSpeed)),
                 Elapsed = -Time.deltaTime,
-                ArrivalVelocity = Vector2.down * intakeFlightSpeed,
                 Duration = travelTime
             };
+        }
+
+        private static Vector2 SmoothWaterfallPosition(Vector2 start, Vector2 end,
+            Vector2 incomingVelocity, Vector2 arrivalVelocity, float duration, float progress)
+        {
+            Vector2 offset = end - start;
+            float distance = offset.magnitude;
+            if (distance < 0.0001f) return end;
+            Vector2 direction = offset / distance;
+            // Preserve the chute's incoming motion without letting a fast or
+            // sideways collision velocity fling the curve past its landing point.
+            float forward = Mathf.Clamp(Vector2.Dot(incomingVelocity, direction)
+                * duration, 0f, distance * 1.6f);
+            Vector2 lateral = incomingVelocity * duration
+                - direction * Vector2.Dot(incomingVelocity, direction) * duration;
+            Vector2 startTangent = direction * forward
+                + Vector2.ClampMagnitude(lateral, distance * 0.3f);
+            Vector2 finishTangent = arrivalVelocity * duration;
+            float t = Mathf.Clamp01(progress);
+            float t2 = t * t;
+            float t3 = t2 * t;
+            float t4 = t3 * t;
+            float t5 = t4 * t;
+            // Match arrival velocity to the lane merge instead of decelerating to
+            // rest at the marker. Both ends have zero acceleration.
+            return start + offset * (10f * t3 - 15f * t4 + 6f * t5)
+                + startTangent * (t - 6f * t3 + 8f * t4 - 3f * t5)
+                + finishTangent * (-4f * t3 + 7f * t4 - 3f * t5);
+        }
+
+        private static Vector2 GetWaterfallArrivalVelocity(Vector2 start, Vector2 end,
+            float duration, float laneSpeed)
+        {
+            Vector2 offset = end - start;
+            float distance = offset.magnitude;
+            if (distance < 0.0001f) return Vector2.zero;
+            // Gradually bend the end of the fall toward the rightward conveyor.
+            Vector2 direction = Vector2.Lerp(offset / distance, Vector2.right, 0.35f).normalized;
+            return direction * Mathf.Min(laneSpeed * 0.35f,
+                distance * 0.4f / Mathf.Max(0.01f, duration));
         }
 
         private Vector3 GetWaterfallStartPosition() =>

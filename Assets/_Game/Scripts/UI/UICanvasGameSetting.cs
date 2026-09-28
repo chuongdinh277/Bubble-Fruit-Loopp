@@ -1,5 +1,7 @@
 using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using BubbleFruitLoop.Managers;
 
@@ -16,6 +18,41 @@ namespace BubbleFruitLoop.UI
         private SettingToggle vibrationToggle;
         private UICanvasGameplay gameplayCanvas;
         private bool gameplayWasActive;
+        private static int activeSettingsCount;
+        private static int lastCloseFrame = -1;
+        private static readonly List<RaycastResult> uiHits = new();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetInputBlock()
+        {
+            activeSettingsCount = 0;
+            lastCloseFrame = -1;
+            uiHits.Clear();
+        }
+
+        private void OnEnable() => activeSettingsCount++;
+
+        private void OnDisable()
+        {
+            activeSettingsCount = Mathf.Max(0, activeSettingsCount - 1);
+            lastCloseFrame = Time.frameCount;
+        }
+
+        public static bool IsGameplayTapBlocked(Vector2 screenPosition)
+        {
+            // Cover the whole world while the modal is open, including its
+            // transparent edges and the frame in which Close was pressed.
+            if (activeSettingsCount > 0 || lastCloseFrame == Time.frameCount) return true;
+            EventSystem events = EventSystem.current;
+            if (events == null) return false;
+            // Raycast this press directly; EventSystem's cached pointer state
+            // may still describe the previous frame during gameplay Update.
+            uiHits.Clear();
+            events.RaycastAll(new PointerEventData(events) { position = screenPosition }, uiHits);
+            foreach (RaycastResult hit in uiHits)
+                if (hit.module is GraphicRaycaster) return true;
+            return false;
+        }
 
         public override void OnInit()
         {

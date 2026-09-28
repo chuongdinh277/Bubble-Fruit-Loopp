@@ -1,4 +1,5 @@
 using BubbleFruitLoop.Gameplay;
+using BubbleFruitLoop.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,6 +23,7 @@ namespace BubbleFruitLoop.Runtime
             Pointer pointer = Pointer.current;
             if (pointer == null || !pointer.press.wasPressedThisFrame || bubble.IsPopped) return;
             Vector3 screen = pointer.position.ReadValue();
+            if (UICanvasGameSetting.IsGameplayTapBlocked(screen)) return;
             Vector2 world = gameplayCamera.ScreenToWorldPoint(screen);
             if (tapArea.OverlapPoint(world)) bubble.Pop();
         }
