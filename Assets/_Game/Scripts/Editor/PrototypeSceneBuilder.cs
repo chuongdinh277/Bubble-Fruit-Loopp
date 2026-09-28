@@ -44,7 +44,7 @@ namespace BubbleFruitLoop.Editor
             Material bubbleMaterial = CreateMaterial("Bubble", new Color(0.2f, 0.75f, 1f, 0.32f), true);
             Material boxMaterial = CreateMaterial("Box", Color.white, false);
             Material environmentMaterial = CreateMaterial("Environment", new Color(0.12f, 0.18f, 0.28f), false);
-            CreatePrefabs(fruitMaterials[0], bubbleMaterial, boxMaterial, out FruitActor fruitPrefab,
+            CreatePrefabs(fruitMaterials[0], bubbleMaterial, boxMaterial, out Fruit fruitPrefab,
                 out BubbleActor bubblePrefab, out BoxView boxPrefab);
             CreateScene(scene, fruitPrefab, bubblePrefab, boxPrefab, fruitMaterials, environmentMaterial);
         }
@@ -82,14 +82,14 @@ namespace BubbleFruitLoop.Editor
         }
 
         private static void CreatePrefabs(Material fruitMaterial, Material bubbleMaterial, Material boxMaterial,
-            out FruitActor fruitPrefab, out BubbleActor bubblePrefab, out BoxView boxPrefab)
+            out Fruit fruitPrefab, out BubbleActor bubblePrefab, out BoxView boxPrefab)
         {
             fruitPrefab = CreateFruitPrefab(fruitMaterial);
             bubblePrefab = CreateBubblePrefab(bubbleMaterial);
             boxPrefab = CreateBoxPrefab(boxMaterial);
         }
 
-        private static FruitActor CreateFruitPrefab(Material material)
+        private static Fruit CreateFruitPrefab(Material material)
         {
             GameObject root = CreateModel("Fruit", PrimitiveType.Sphere, material, out MeshRenderer renderer);
             root.transform.localScale = Vector3.one * 0.42f;
@@ -97,7 +97,7 @@ namespace BubbleFruitLoop.Editor
             body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
             CircleCollider2D collider = root.AddComponent<CircleCollider2D>();
-            FruitActor actor = root.AddComponent<FruitActor>();
+            Fruit actor = root.AddComponent<Fruit>();
             actor.Initialize(body, collider, renderer);
             return SavePrefab(root, actor, "Fruit");
         }
@@ -138,7 +138,7 @@ namespace BubbleFruitLoop.Editor
             return component;
         }
 
-        private static void CreateScene(Scene scene, FruitActor fruitPrefab, BubbleActor bubblePrefab, BoxView boxPrefab,
+        private static void CreateScene(Scene scene, Fruit fruitPrefab, BubbleActor bubblePrefab, BoxView boxPrefab,
             Material[] fruitMaterials, Material environmentMaterial)
         {
             GameObject gameplay = new("--- GAMEPLAY ROOT ---");
@@ -147,7 +147,7 @@ namespace BubbleFruitLoop.Editor
             Transform poolRoot = CreateRoot("Pools", gameplay.transform);
             CreateEnvironment(gameplay.transform, environmentMaterial);
             CreateLayoutGuides(gameplay.transform);
-            List<FruitActor> fruits = new(30);
+            List<Fruit> fruits = new(30);
             BubbleActor[] bubbles = CreateBubbles(gameplay.transform, bubblePrefab, fruitPrefab, fruitMaterials, fruits);
             BoxColumnAuthoring[] columns = CreateBoxes(gameplay.transform, boxPrefab, fruitMaterials);
             PrepareTemplate(fruitPrefab, poolRoot);
@@ -193,8 +193,8 @@ namespace BubbleFruitLoop.Editor
             CreateLoopMarkers(environment, material);
         }
 
-        private static BubbleActor[] CreateBubbles(Transform parent, BubbleActor bubblePrefab, FruitActor fruitPrefab,
-            Material[] materials, List<FruitActor> allFruits)
+        private static BubbleActor[] CreateBubbles(Transform parent, BubbleActor bubblePrefab, Fruit fruitPrefab,
+            Material[] materials, List<Fruit> allFruits)
         {
             Transform root = CreateRoot("Bubble Board", parent);
             BubbleActor[] bubbles = new BubbleActor[9];
@@ -207,7 +207,7 @@ namespace BubbleFruitLoop.Editor
                 int fruitCount = bubbleIndex < 3 ? 4 : 3;
                 for (int fruitIndex = 0; fruitIndex < fruitCount; fruitIndex++)
                 {
-                    FruitActor fruit = Object.Instantiate(fruitPrefab, bubble.transform);
+                    Fruit fruit = Object.Instantiate(fruitPrefab, bubble.transform);
                     int typeIndex = (bubbleIndex + fruitIndex) % FruitColors.Length;
                     fruit.name = $"Fruit_{(FruitType)typeIndex}_{fruitIndex + 1}";
                     fruit.Configure((FruitType)typeIndex, FruitColors[typeIndex]);

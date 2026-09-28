@@ -23,7 +23,7 @@ namespace BubbleFruitLoop.Gameplay
                 if (remainingBubbles[index] != null && !remainingBubbles[index].IsPopped) return;
             }
 
-            FruitActor[] releasedFruit = FindObjectsByType<FruitActor>(FindObjectsSortMode.None);
+            Fruit[] releasedFruit = FindObjectsByType<Fruit>(FindObjectsSortMode.None);
             for (int index = 0; index < releasedFruit.Length; index++)
                 if (releasedFruit[index] != null) releasedFruit[index].ArmClearRecovery();
         }
@@ -53,7 +53,7 @@ namespace BubbleFruitLoop.Gameplay
             const float releaseInterval = 0.012f;
             for (int index = 0; index < fruits.Count; index++)
             {
-                FruitActor fruit = fruits[index];
+                Fruit fruit = fruits[index];
                 if (fruit == null)
                 {
                     if (index < fruits.Count - 1) yield return new WaitForSeconds(releaseInterval);

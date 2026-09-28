@@ -20,7 +20,7 @@ namespace BubbleFruitLoop.Editor
         }
 
         public GameObject BoardRoot { get; }
-        public FruitActor FruitSample { get; private set; }
+        public Fruit FruitSample { get; private set; }
 
         public void CreateBoard(Camera camera)
         {
@@ -45,7 +45,7 @@ namespace BubbleFruitLoop.Editor
             Rigidbody2D body = CreateBubbleBody(root);
             CircleCollider2D outer = root.AddComponent<CircleCollider2D>();
             outer.radius = 2.32f;
-            BubbleFruitMotion motion = root.AddComponent<BubbleFruitMotion>();
+            BubbleManager motion = root.AddComponent<BubbleManager>();
             BubbleActor actor = root.AddComponent<BubbleActor>();
             Transform visual = CreateChild("Visual", root.transform);
             MeshRenderer back = CreateBubbleMesh("BubbleBack", visual, assets.Back, 10, layoutIndex * 0.7f);
@@ -55,7 +55,7 @@ namespace BubbleFruitLoop.Editor
             boundary.points = CreateCirclePoints(2.03f, 36);
             boundary.edgeRadius = 0.1f;
             Transform fruitRoot = CreateChild("FruitRoot", root.transform);
-            FruitActor[] fruits = CreateFruits(fruitRoot, layoutIndex);
+            Fruit[] fruits = CreateFruits(fruitRoot, layoutIndex);
             for (int index = 0; index < fruits.Length; index++) actor.AddFruit(fruits[index]);
             motion.Configure(fruits, layoutIndex % 2 == 0 ? 1 : -1, 13.7f + layoutIndex);
             actor.Initialize(boundary, new Renderer[] { back, front }, motion);
@@ -156,14 +156,14 @@ namespace BubbleFruitLoop.Editor
             }
         }
 
-        private FruitActor[] CreateFruits(Transform parent, int seed)
+        private Fruit[] CreateFruits(Transform parent, int seed)
         {
             Vector2[] positions =
             {
                 new(-0.95f, 0.75f), new(0f, 1.05f), new(0.95f, 0.7f), new(-1.05f, -0.15f),
                 new(0f, 0.1f), new(1.05f, -0.2f), new(-0.55f, -0.95f), new(0.55f, -0.9f)
             };
-            FruitActor[] fruits = new FruitActor[positions.Length];
+            Fruit[] fruits = new Fruit[positions.Length];
             for (int index = 0; index < fruits.Length; index++)
             {
                 bool orange = (index + seed) % 2 == 0;
@@ -183,7 +183,7 @@ namespace BubbleFruitLoop.Editor
                 body.interpolation = RigidbodyInterpolation2D.Interpolate;
                 CircleCollider2D collider = fruitObject.AddComponent<CircleCollider2D>();
                 ConfigureTightCircle(collider, sprite);
-                FruitActor fruit = fruitObject.AddComponent<FruitActor>();
+                Fruit fruit = fruitObject.AddComponent<Fruit>();
                 fruit.Initialize(body, collider, renderer);
                 fruit.Configure(orange ? FruitType.Orange : FruitType.Strawberry, Color.white);
                 fruit.OnSpawned();

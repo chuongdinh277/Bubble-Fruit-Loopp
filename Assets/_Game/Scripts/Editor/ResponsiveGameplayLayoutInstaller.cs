@@ -25,7 +25,7 @@ namespace BubbleFruitLoop.Editor
         [MenuItem("BubbleFruit/Adapt Gameplay To Phone And Tablet")]
         public static void InstallInOpenScene()
         {
-            if (Object.FindFirstObjectByType<EditableFruitLoopController>() == null) return;
+            if (Object.FindFirstObjectByType<FruitLoopManager>() == null) return;
             Camera camera = Camera.main;
             if (camera == null || !camera.orthographic) return;
             if (camera.GetComponent<ResponsiveGameplayCamera>() == null)

@@ -74,7 +74,7 @@ namespace BubbleFruitLoop.Editor
                         cfg.bubbleScale = Mathf.Max(0.1f, rootScale * visualScale);
                         cfg.fruits.Clear();
                         cfg.fruitScales.Clear();
-                        foreach (FruitActor fruit in bubble.GetComponentsInChildren<FruitActor>(true))
+                        foreach (Fruit fruit in bubble.GetComponentsInChildren<Fruit>(true))
                         {
                             if (fruit != null)
                             {

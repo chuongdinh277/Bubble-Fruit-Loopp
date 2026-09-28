@@ -120,7 +120,7 @@ namespace BubbleFruitLoop.Editor
                 changed = true;
             }
             display.Configure(frameRenderer, fillRenderer, label,
-                Object.FindFirstObjectByType<EditableFruitLoopController>(), orangeFillSprite, redFillSprite);
+                Object.FindFirstObjectByType<FruitLoopManager>(), orangeFillSprite, redFillSprite);
 
             LowerBoxLayout(boardBounds);
             RemoveRuntimeUiFromScene();
@@ -133,7 +133,7 @@ namespace BubbleFruitLoop.Editor
 
         private static void RepairFruitPaletteMapping()
         {
-            LevelLoader loader = Object.FindFirstObjectByType<LevelLoader>();
+            LevelManager loader = Object.FindFirstObjectByType<LevelManager>();
             if (loader == null) return;
 
             // Arrays must follow FruitType's numeric order:

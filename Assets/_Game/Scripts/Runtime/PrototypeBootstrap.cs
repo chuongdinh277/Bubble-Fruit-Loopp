@@ -15,28 +15,28 @@ namespace BubbleFruitLoop.Runtime
         [Header("Scene References")]
         [SerializeField] private Camera gameplayCamera;
         [SerializeField] private Transform poolRoot;
-        [SerializeField] private FruitActor fruitPrefab;
+        [SerializeField] private Fruit fruitPrefab;
         [SerializeField] private BubbleActor bubblePrefab;
         [SerializeField] private BoxView boxPrefab;
         [SerializeField] private BubbleActor[] bubbles;
-        [SerializeField] private FruitActor[] fruits;
+        [SerializeField] private Fruit[] fruits;
         [SerializeField] private BoxColumnAuthoring[] columns;
 
         private readonly Dictionary<Collider2D, BubbleActor> bubbleByCollider = new();
-        private readonly List<FruitActor> trackedFruits = new(48);
-        private ComponentPool<FruitActor> fruitPool;
+        private readonly List<Fruit> trackedFruits = new(48);
+        private ComponentPool<Fruit> fruitPool;
         private ComponentPool<BubbleActor> bubblePool;
         private ComponentPool<BoxView> boxPool;
-        private FruitLoopManager loop;
+        private PrototypeFruitLoopManager loop;
         private FunnelIntakeManager intake;
         private PickupSystem pickup;
         private GameStateResolver stateResolver;
-        
+
         private readonly Dictionary<BoxRuntime, BoxView> boxViewMap = new();
 
-        public void ConfigureScene(Camera cameraReference, Transform poolContainer, FruitActor fruitTemplate,
+        public void ConfigureScene(Camera cameraReference, Transform poolContainer, Fruit fruitTemplate,
             BubbleActor bubbleTemplate, BoxView boxTemplate, BubbleActor[] sceneBubbles,
-            FruitActor[] sceneFruits, BoxColumnAuthoring[] sceneColumns)
+            Fruit[] sceneFruits, BoxColumnAuthoring[] sceneColumns)
         {
             gameplayCamera = cameraReference;
             poolRoot = poolContainer;
@@ -68,7 +68,7 @@ namespace BubbleFruitLoop.Runtime
 
         private void InitializePools()
         {
-            fruitPool = new ComponentPool<FruitActor>(() => Instantiate(fruitPrefab), CreatePoolRoot("FruitPool"), 16);
+            fruitPool = new ComponentPool<Fruit>(() => Instantiate(fruitPrefab), CreatePoolRoot("FruitPool"), 16);
             bubblePool = new ComponentPool<BubbleActor>(() => Instantiate(bubblePrefab), CreatePoolRoot("BubblePool"), 4);
             boxPool = new ComponentPool<BoxView>(() => Instantiate(boxPrefab), CreatePoolRoot("BoxPool"), 6);
         }
@@ -77,7 +77,7 @@ namespace BubbleFruitLoop.Runtime
         {
             GameSignals signals = new();
             LoopPathCache path = new(new Vector3(0f, -2.15f), 4.15f, 1.65f, 96);
-            loop = new FruitLoopManager(path, new CapacityController(30, 5), signals, 2.5f);
+            loop = new PrototypeFruitLoopManager(path, new CapacityController(30, 5), signals, 2.5f);
             intake = new FunnelIntakeManager(loop);
             BoxBoardManager board = BuildBoxBoard();
             MatchResolver matches = new(loop, board, signals);
@@ -108,7 +108,7 @@ namespace BubbleFruitLoop.Runtime
             }
         }
 
-        private void OnFruitCollectedToBox(FruitActor fruit, BoxRuntime boxRuntime)
+        private void OnFruitCollectedToBox(Fruit fruit, BoxRuntime boxRuntime)
         {
             SoundManager.TryPlayFX(FxID.FruitCollect);
             if (boxViewMap.TryGetValue(boxRuntime, out BoxView view))
@@ -123,7 +123,7 @@ namespace BubbleFruitLoop.Runtime
             }
         }
 
-        private System.Collections.IEnumerator AnimateFruitToBox(FruitActor fruit, BoxView owner,
+        private System.Collections.IEnumerator AnimateFruitToBox(Fruit fruit, BoxView owner,
             Transform target, int slotIndex)
         {
             SpriteRenderer flightRenderer = fruit != null ? fruit.VisualSpriteRenderer : null;
@@ -171,7 +171,7 @@ namespace BubbleFruitLoop.Runtime
                 BoxColumnAuthoring source = columns[columnIndex];
                 BoxColumnRuntime runtime = new(columnIndex, source.ActivePoint.position, source.PickupPoint.position);
                 board.AddColumn(runtime);
-                
+
                 // Also subscribe to visual activations
                 runtime.OnBoxActivated += (boxRt, pos) => {
                     if (boxViewMap.TryGetValue(boxRt, out BoxView view))
@@ -179,7 +179,7 @@ namespace BubbleFruitLoop.Runtime
                         view.PlayPromote(pos);
                     }
                 };
-                
+
                 for (int boxIndex = 0; boxIndex < source.Boxes.Length; boxIndex++)
                 {
                     BoxView view = source.Boxes[boxIndex];
@@ -228,8 +228,8 @@ namespace BubbleFruitLoop.Runtime
         {
             for (int index = 0; index < trackedFruits.Count; index++)
             {
-                FruitActor fruit = trackedFruits[index];
-                if (fruit.State == FruitState.Released) intake.Submit(fruit);
+                Fruit fruit = trackedFruits[index];
+                if (fruit.State == FruitStatus.Released) intake.Submit(fruit);
             }
         }
         private Transform CreatePoolRoot(string name)
@@ -239,7 +239,7 @@ namespace BubbleFruitLoop.Runtime
             return child;
         }
 
-        private void OnLoopSlotReleased(FruitActor fruit) { }
+        private void OnLoopSlotReleased(Fruit fruit) { }
 
         private void ValidateReferences()
         {

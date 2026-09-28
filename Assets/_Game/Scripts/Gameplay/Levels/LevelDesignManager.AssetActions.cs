@@ -18,9 +18,9 @@ namespace BubbleFruitLoop.Editor
         {
 #if UNITY_EDITOR
             if (bubblePrefab == null) bubblePrefab = AssetDatabase.LoadAssetAtPath<BubbleActor>("Assets/_Game/Resources/Prefabs/BubbleAsset2D.prefab");
-            if (fruitPrefab == null) fruitPrefab = AssetDatabase.LoadAssetAtPath<FruitActor>("Assets/_Game/Resources/Prefabs/FruitAsset2D.prefab");
+            if (fruitPrefab == null) fruitPrefab = AssetDatabase.LoadAssetAtPath<Fruit>("Assets/_Game/Resources/Prefabs/FruitAsset2D.prefab");
             if (box4Prefab == null) box4Prefab = AssetDatabase.LoadAssetAtPath<BoxView>("Assets/_Game/Resources/Box4.prefab");
-            
+
             int fruitTypeCount = System.Enum.GetValues(typeof(FruitType)).Length;
             if (fruitMaterials == null || fruitMaterials.Length != fruitTypeCount)
                 fruitMaterials = new Material[fruitTypeCount];
@@ -173,7 +173,7 @@ namespace BubbleFruitLoop.Editor
                 {
                     for (int index = 0; index < fruitRoot.childCount; index++)
                     {
-                        FruitActor fruit = fruitRoot.GetChild(index).GetComponent<FruitActor>();
+                        Fruit fruit = fruitRoot.GetChild(index).GetComponent<Fruit>();
                         if (fruit != null) scales.Add(fruit.transform.localScale);
                     }
                 }

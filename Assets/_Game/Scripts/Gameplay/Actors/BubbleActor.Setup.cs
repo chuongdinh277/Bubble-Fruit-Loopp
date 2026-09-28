@@ -39,15 +39,15 @@ namespace BubbleFruitLoop.Gameplay
                 originalVisualScale = visualRoot.localScale;
             }
             CacheDeformMeshes();
-            
+
             popped = false;
             if (fruits.Count == 0)
             {
-                fruits.AddRange(GetComponentsInChildren<FruitActor>(true));
+                fruits.AddRange(GetComponentsInChildren<Fruit>(true));
             }
 
             if (!popped && fruitMotion != null) fruitMotion.StartMotion();
-            
+
             if (innerBoundary is EdgeCollider2D edge && edge.edgeRadius < 0.05f)
             {
                 edge.edgeRadius = 0.1f;

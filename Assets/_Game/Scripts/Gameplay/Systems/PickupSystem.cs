@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using BubbleFruitLoop.Managers;
 
 namespace BubbleFruitLoop.Gameplay
 {
     public sealed class PickupSystem
     {
-        private readonly Dictionary<FruitActor, float> previousDistances = new(40);
-        private readonly FruitLoopManager loop;
+        private readonly Dictionary<Fruit, float> previousDistances = new(40);
+        private readonly PrototypeFruitLoopManager loop;
         private readonly MatchResolver resolver;
         private readonly float[] pickupDistances;
 
-        public PickupSystem(FruitLoopManager loop, MatchResolver resolver, BoxBoardManager board)
+        public PickupSystem(PrototypeFruitLoopManager loop, MatchResolver resolver, BoxBoardManager board)
         {
             this.loop = loop;
             this.resolver = resolver;
@@ -24,8 +24,8 @@ namespace BubbleFruitLoop.Gameplay
             var fruits = loop.Fruits;
             for (int fruitIndex = fruits.Count - 1; fruitIndex >= 0; fruitIndex--)
             {
-                FruitActor fruit = fruits[fruitIndex];
-                if (fruit.State != FruitState.OnLoop) continue;
+                Fruit fruit = fruits[fruitIndex];
+                if (fruit.State != FruitStatus.OnLoop) continue;
                 float previous = previousDistances.TryGetValue(fruit, out float value) ? value : fruit.PathDistance;
                 float current = fruit.PathDistance;
 
@@ -39,7 +39,7 @@ namespace BubbleFruitLoop.Gameplay
                     }
                 }
 
-                if (fruit.State == FruitState.OnLoop) previousDistances[fruit] = current;
+                if (fruit.State == FruitStatus.OnLoop) previousDistances[fruit] = current;
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using BubbleFruitLoop.Core;
 using BubbleFruitLoop.Managers;
 
@@ -6,14 +6,14 @@ namespace BubbleFruitLoop.Gameplay
 {
     public sealed class GameStateResolver
     {
-        private readonly FruitLoopManager loop;
+        private readonly PrototypeFruitLoopManager loop;
         private readonly BoxBoardManager boxes;
         private readonly MatchResolver matches;
         private readonly GameSignals signals;
 
         public GameResult Result { get; private set; } = GameResult.Playing;
 
-        public GameStateResolver(FruitLoopManager loop, BoxBoardManager boxes, MatchResolver matches, GameSignals signals)
+        public GameStateResolver(PrototypeFruitLoopManager loop, BoxBoardManager boxes, MatchResolver matches, GameSignals signals)
         {
             this.loop = loop ?? throw new ArgumentNullException(nameof(loop));
             this.boxes = boxes ?? throw new ArgumentNullException(nameof(boxes));

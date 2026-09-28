@@ -168,7 +168,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 5400098341833784203}
   bodyCollider: {fileID: 1635302764998594342}
   visualRenderer: {fileID: 402320932864000649}

@@ -286,7 +286,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 9624575}
   bodyCollider: {fileID: 9624574}
   visualRenderer: {fileID: 9624576}
@@ -459,7 +459,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 40248480}
   bodyCollider: {fileID: 40248479}
   visualRenderer: {fileID: 40248481}
@@ -1025,7 +1025,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 144310527}
   bodyCollider: {fileID: 144310526}
   visualRenderer: {fileID: 144310528}
@@ -1288,7 +1288,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 155027367}
   bodyCollider: {fileID: 155027366}
   visualRenderer: {fileID: 155027368}
@@ -1360,7 +1360,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 222907213}
   bodyCollider: {fileID: 222907212}
   visualRenderer: {fileID: 222907211}
@@ -2029,7 +2029,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 391774622}
   bodyCollider: {fileID: 391774621}
   visualRenderer: {fileID: 391774623}
@@ -2202,7 +2202,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 419177361}
   bodyCollider: {fileID: 419177360}
   visualRenderer: {fileID: 419177362}
@@ -2554,7 +2554,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 486905221}
   bodyCollider: {fileID: 486905220}
   visualRenderer: {fileID: 486905222}
@@ -3013,7 +3013,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 583533872}
   bodyCollider: {fileID: 583533871}
   visualRenderer: {fileID: 583533873}
@@ -3509,7 +3509,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 659019957}
   bodyCollider: {fileID: 659019956}
   visualRenderer: {fileID: 659019958}
@@ -3830,7 +3830,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 680853949}
   bodyCollider: {fileID: 680853948}
   visualRenderer: {fileID: 680853950}
@@ -4003,7 +4003,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 692568055}
   bodyCollider: {fileID: 692568054}
   visualRenderer: {fileID: 692568056}
@@ -4539,7 +4539,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 803746116}
   bodyCollider: {fileID: 803746115}
   visualRenderer: {fileID: 803746117}
@@ -5306,7 +5306,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 875203816}
   bodyCollider: {fileID: 875203815}
   visualRenderer: {fileID: 875203817}
@@ -5585,7 +5585,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 978592187}
   bodyCollider: {fileID: 978592186}
   visualRenderer: {fileID: 978592188}
@@ -6090,7 +6090,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1109551096}
   bodyCollider: {fileID: 1109551095}
   visualRenderer: {fileID: 1109551097}
@@ -6263,7 +6263,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1117592753}
   bodyCollider: {fileID: 1117592752}
   visualRenderer: {fileID: 1117592754}
@@ -7079,7 +7079,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1248722651}
   bodyCollider: {fileID: 1248722650}
   visualRenderer: {fileID: 1248722652}
@@ -7342,7 +7342,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1270170575}
   bodyCollider: {fileID: 1270170574}
   visualRenderer: {fileID: 1270170576}
@@ -7652,7 +7652,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1315744968}
   bodyCollider: {fileID: 1315744967}
   visualRenderer: {fileID: 1315744969}
@@ -7999,7 +7999,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1356731957}
   bodyCollider: {fileID: 1356731956}
   visualRenderer: {fileID: 1356731958}
@@ -8548,7 +8548,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1482143477}
   bodyCollider: {fileID: 1482143476}
   visualRenderer: {fileID: 1482143478}
@@ -8721,7 +8721,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1487546993}
   bodyCollider: {fileID: 1487546992}
   visualRenderer: {fileID: 1487546994}
@@ -9404,7 +9404,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1618729449}
   bodyCollider: {fileID: 1618729448}
   visualRenderer: {fileID: 1618729450}
@@ -9577,7 +9577,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1698703252}
   bodyCollider: {fileID: 1698703251}
   visualRenderer: {fileID: 1698703253}
@@ -10122,7 +10122,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1826204185}
   bodyCollider: {fileID: 1826204184}
   visualRenderer: {fileID: 1826204186}
@@ -10491,7 +10491,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 1902943445}
   bodyCollider: {fileID: 1902943444}
   visualRenderer: {fileID: 1902943446}
@@ -10801,7 +10801,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 2012736052}
   bodyCollider: {fileID: 2012736051}
   visualRenderer: {fileID: 2012736053}
@@ -10974,7 +10974,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 2035701196}
   bodyCollider: {fileID: 2035701195}
   visualRenderer: {fileID: 2035701197}
@@ -11564,7 +11564,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
   body: {fileID: 2083550275}
   bodyCollider: {fileID: 2083550274}
   visualRenderer: {fileID: 2083550276}
@@ -11735,7 +11735,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bfbe553146f72de4d9f65d2744dbfc4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitActor
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.Fruit
 --- !u!4 &1025126181453654784 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6968066566127223659, guid: 00e1dd886246d5e48a6deec46381cfe2, type: 3}

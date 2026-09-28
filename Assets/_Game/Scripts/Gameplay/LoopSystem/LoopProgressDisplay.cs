@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using TMPro;
 namespace BubbleFruitLoop.Gameplay
 {
     [ExecuteAlways]
     public sealed class LoopProgressDisplay : MonoBehaviour
     {
-        [SerializeField] private EditableFruitLoopController loop;
+        [SerializeField] private FruitLoopManager loop;
         [SerializeField] private SpriteRenderer frameRenderer;
         [SerializeField] private SpriteRenderer fillRenderer;
         [SerializeField] private TMP_Text countLabel;
@@ -31,7 +31,7 @@ namespace BubbleFruitLoop.Gameplay
         private static Sprite maskSprite;
 
         public void Configure(SpriteRenderer frame, SpriteRenderer fill, TMP_Text label,
-            EditableFruitLoopController controller = null, Sprite orangeFill = null, Sprite redFill = null)
+            FruitLoopManager controller = null, Sprite orangeFill = null, Sprite redFill = null)
         {
             frameRenderer = frame;
             fillRenderer = fill;
@@ -61,7 +61,7 @@ namespace BubbleFruitLoop.Gameplay
 
         private void Awake()
         {
-            if (loop == null) loop = FindFirstObjectByType<EditableFruitLoopController>();
+            if (loop == null) loop = FindFirstObjectByType<FruitLoopManager>();
             PrepareCountLabel();
             PrepareRoundedFill();
             CacheFullFillGeometry();
@@ -70,7 +70,7 @@ namespace BubbleFruitLoop.Gameplay
 
         private void Update()
         {
-            if (loop == null) loop = FindFirstObjectByType<EditableFruitLoopController>();
+            if (loop == null) loop = FindFirstObjectByType<FruitLoopManager>();
             // In edit mode the Fill transform is authored by hand. Read it every
             // frame, but never write it back from the preview logic.
             if (!Application.isPlaying) CacheFullFillGeometry();

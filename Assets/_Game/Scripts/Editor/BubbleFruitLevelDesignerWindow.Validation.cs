@@ -93,9 +93,9 @@ namespace BubbleFruitLoop.Editor
 
             Transform[] points = { Find("P1"), Find("P2"), Find("P3") };
             table.Configure(views.ToArray(), types.ToArray(), columns.ToArray(), orders.ToArray(), points);
-            EditableFruitLoopController loop = Object.FindFirstObjectByType<EditableFruitLoopController>();
-            EditableBoxBoardController board = loop.GetComponent<EditableBoxBoardController>();
-            if (board == null) board = loop.gameObject.AddComponent<EditableBoxBoardController>();
+            FruitLoopManager loop = Object.FindFirstObjectByType<FruitLoopManager>();
+            BoxManager board = loop.GetComponent<BoxManager>();
+            if (board == null) board = loop.gameObject.AddComponent<BoxManager>();
             board.ConfigureAssignmentTable(table);
             board.ConfigureSceneLayout(views.ToArray(), points);
             EditorUtility.SetDirty(table);

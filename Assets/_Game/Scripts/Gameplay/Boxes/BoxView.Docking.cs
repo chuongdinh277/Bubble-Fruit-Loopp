@@ -15,7 +15,7 @@ namespace BubbleFruitLoop.Gameplay
     {
         private sealed class DockedVisual
         {
-            public FruitActor fruit;
+            public Fruit fruit;
             public SpriteRenderer renderer;
             public Sprite sprite;
             public Color color;
@@ -31,7 +31,7 @@ namespace BubbleFruitLoop.Gameplay
             return index >= 0 && index < fruitSlots.Length ? fruitSlots[index] : transform;
         }
 
-        public bool DockFruit(FruitActor fruit, SpriteRenderer source, Sprite flightSprite, int slotIndex)
+        public bool DockFruit(Fruit fruit, SpriteRenderer source, Sprite flightSprite, int slotIndex)
         {
             if (fruit == null || source == null || flightSprite == null) return false;
             // The flight owns this renderer and sprite snapshot. Never search the
@@ -47,11 +47,12 @@ namespace BubbleFruitLoop.Gameplay
             fruit.DisablePhysics();
             if (fruit.BodyCollider != null) fruit.BodyCollider.enabled = false;
             collectedFruits.Add(fruit);
+            fruit.ChangeFruitStateTo(FruitStates.InBox, false);
             StartCoroutine(PunchSlot(slot));
             return true;
         }
 
-        private void DockActorInSlot(FruitActor fruit, SpriteRenderer source, Transform slot, int slotIndex)
+        private void DockActorInSlot(Fruit fruit, SpriteRenderer source, Transform slot, int slotIndex)
         {
             // Keep the actual actor and its renderer. A second SpriteRenderer
             // introduced a needless copy step where sprite/tint/material could
@@ -131,11 +132,11 @@ namespace BubbleFruitLoop.Gameplay
             }
         }
 
-        public void ReleaseCollectedFruits(Action<FruitActor> release)
+        public void ReleaseCollectedFruits(Action<Fruit> release)
         {
             for (int index = 0; index < collectedFruits.Count; index++)
             {
-                FruitActor fruit = collectedFruits[index];
+                Fruit fruit = collectedFruits[index];
                 if (fruit == null) continue;
                 if (release != null) release.Invoke(fruit);
                 else fruit.gameObject.SetActive(false);

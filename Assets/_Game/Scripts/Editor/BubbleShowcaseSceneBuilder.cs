@@ -98,7 +98,7 @@ namespace BubbleFruitLoop.Editor
             return material;
         }
 
-        private static void CreatePrefabs(GameObject bubbleRoot, FruitActor fruitSample)
+        private static void CreatePrefabs(GameObject bubbleRoot, Fruit fruitSample)
         {
             Directory.CreateDirectory(PrefabPath);
             PrefabUtility.SaveAsPrefabAsset(bubbleRoot, PrefabPath + "/BubbleAsset2D.prefab");

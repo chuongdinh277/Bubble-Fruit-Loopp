@@ -28,12 +28,12 @@ namespace BubbleFruitLoop.Editor
             Undo.SetCurrentGroupName("Fix Full Level Fruit Size");
             int undoGroup = Undo.GetCurrentGroup();
 
-            FruitActor[] sceneFruits = FindObjectsByType<FruitActor>(
+            Fruit[] sceneFruits = FindObjectsByType<Fruit>(
                 FindObjectsInactive.Include, FindObjectsSortMode.None);
             int changed = 0;
             for (int index = 0; index < sceneFruits.Length; index++)
             {
-                FruitActor fruit = sceneFruits[index];
+                Fruit fruit = sceneFruits[index];
                 if (fruit == null || EditorUtility.IsPersistent(fruit)) continue;
                 SetFruitLocalScale(fruit, target, true);
                 FitColliderAroundFruit(fruit, fruitColliderPadding, true);
@@ -50,7 +50,7 @@ namespace BubbleFruitLoop.Editor
                     GameObject prefabRoot = PrefabUtility.LoadPrefabContents(prefabPath);
                     try
                     {
-                        FruitActor prefabFruit = prefabRoot.GetComponentInChildren<FruitActor>(true);
+                        Fruit prefabFruit = prefabRoot.GetComponentInChildren<Fruit>(true);
                         if (prefabFruit != null)
                         {
                             SetFruitLocalScale(prefabFruit, target, false);
@@ -73,7 +73,7 @@ namespace BubbleFruitLoop.Editor
             Debug.Log($"[Fruit Size Tool] Resized {changed} fruits to {target:0.###} and fitted every collider around its complete sprite.", this);
         }
 
-        private static void SetFruitLocalScale(FruitActor fruit, float target, bool recordUndo)
+        private static void SetFruitLocalScale(Fruit fruit, float target, bool recordUndo)
         {
             if (recordUndo) Undo.RecordObject(fruit.transform, "Resize Fruit");
             Vector3 scale = fruit.transform.localScale;
@@ -82,7 +82,7 @@ namespace BubbleFruitLoop.Editor
         }
 
         private static void FitColliderAroundFruit(
-            FruitActor fruit, float paddingRatio, bool recordUndo)
+            Fruit fruit, float paddingRatio, bool recordUndo)
         {
             SpriteRenderer spriteRenderer = fruit.VisualSpriteRenderer;
             Collider2D collider = fruit.BodyCollider;
@@ -174,7 +174,7 @@ namespace BubbleFruitLoop.Editor
                 BubbleConfig config = bubbles[bubbleIndex];
                 if (config?.instance == null) continue;
 
-                FruitActor[] fruits = config.instance.GetComponentsInChildren<FruitActor>(true);
+                Fruit[] fruits = config.instance.GetComponentsInChildren<Fruit>(true);
                 config.fruitScales = new List<Vector3>(fruits.Length);
                 for (int fruitIndex = 0; fruitIndex < fruits.Length; fruitIndex++)
                     config.fruitScales.Add(fruits[fruitIndex].transform.localScale);

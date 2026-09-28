@@ -1,7 +1,8 @@
-﻿namespace BubbleFruitLoop.Gameplay
+namespace BubbleFruitLoop.Gameplay
 {
     public enum FruitType { Apple, Orange, Grape, Lemon, Strawberry }
-    public enum FruitState
+    [UnityEngine.Scripting.APIUpdating.MovedFrom(true, "BubbleFruitLoop.Gameplay", "Assembly-CSharp", "FruitState")]
+    public enum FruitStatus
     {
         Pooled, InsideBubble, Released, Jammed, IntakeWaiting, EnteringLoop, Transient,
         StableOnLoop, Reserved, Collecting,

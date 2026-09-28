@@ -31,7 +31,7 @@ namespace BubbleFruitLoop.Editor
             bool wasDirty = scene.isDirty;
             GameObject root = new("Fruit Loop Path (EDIT POINTS)");
             LoopPathAuthoring authoring = root.AddComponent<LoopPathAuthoring>();
-            EditableFruitLoopController controller = root.AddComponent<EditableFruitLoopController>();
+            FruitLoopManager controller = root.AddComponent<FruitLoopManager>();
 
             Vector2[] positions =
             {

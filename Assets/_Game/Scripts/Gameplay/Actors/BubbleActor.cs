@@ -10,15 +10,15 @@ namespace BubbleFruitLoop.Gameplay
 {
     public sealed partial class BubbleActor : MonoBehaviour, IPoolable
     {
-        [SerializeField] private List<FruitActor> fruits = new(8);
+        [SerializeField] private List<Fruit> fruits = new(8);
         [SerializeField] private Rigidbody2D physicsBody;
         [SerializeField] private Collider2D outerCollider;
         [SerializeField] private Collider2D innerBoundary;
         [SerializeField] private Transform visualRoot;
         [SerializeField] private Renderer[] visualRenderers;
-        [SerializeField] private BubbleFruitMotion fruitMotion;
+        [SerializeField] private BubbleManager fruitMotion;
         private BubbleDeformMesh[] deformMeshes;
-        
+
         [Header("Jiggle Physics")]
         [SerializeField, Min(0f)] private float springStiffness = 30f;
         [SerializeField, Min(0f)] private float damping = 9f;
@@ -43,12 +43,12 @@ namespace BubbleFruitLoop.Gameplay
         [SerializeField, Min(0f)] private float fruitBurstForceMin = 1.05f;
         [SerializeField, Min(0f)] private float fruitBurstForceMax = 1.75f;
         [SerializeField, Min(0f)] private float fruitBurstLift = 0.55f;
-        
+
         private Vector3 originalVisualScale = Vector3.one;
-        private float currentSquash; 
+        private float currentSquash;
         private float squashVelocity;
         private float idlePhase;
-        
+
         private bool popped;
 
         public bool IsPopped => popped;
@@ -56,17 +56,17 @@ namespace BubbleFruitLoop.Gameplay
 
         private void IsolateFromOtherFruits()
         {
-            FruitActor[] allFruits = FindObjectsByType<FruitActor>(FindObjectsSortMode.None);
+            Fruit[] allFruits = FindObjectsByType<Fruit>(FindObjectsSortMode.None);
             for (int i = 0; i < allFruits.Length; i++)
             {
-                FruitActor f = allFruits[i];
+                Fruit f = allFruits[i];
                 if (f != null && f.BodyCollider != null)
                 {
-                    if (outerCollider != null) 
+                    if (outerCollider != null)
                     {
                         Physics2D.IgnoreCollision(outerCollider, f.BodyCollider, true);
                     }
-                    
+
                     if (innerBoundary != null && !fruits.Contains(f))
                     {
                         Physics2D.IgnoreCollision(innerBoundary, f.BodyCollider, true);
@@ -82,7 +82,7 @@ namespace BubbleFruitLoop.Gameplay
             visualRoot = renderer.transform;
         }
 
-        public void Initialize(Collider2D boundary, Renderer[] renderers, BubbleFruitMotion motion)
+        public void Initialize(Collider2D boundary, Renderer[] renderers, BubbleManager motion)
         {
             innerBoundary = boundary;
             visualRenderers = renderers;
@@ -98,7 +98,7 @@ namespace BubbleFruitLoop.Gameplay
             innerBoundary = inside;
         }
 
-        public void AddFruit(FruitActor fruit)
+        public void AddFruit(Fruit fruit)
         {
             if (fruit != null)
             {
@@ -110,11 +110,11 @@ namespace BubbleFruitLoop.Gameplay
             }
         }
 
-        public void ReplaceFruits(IEnumerable<FruitActor> replacements)
+        public void ReplaceFruits(IEnumerable<Fruit> replacements)
         {
             fruits.Clear();
             if (replacements == null) return;
-            foreach (FruitActor fruit in replacements) AddFruit(fruit);
+            foreach (Fruit fruit in replacements) AddFruit(fruit);
         }
 
         public void EnableCollisionWithReleasedFruit(Collider2D fruitCollider)
@@ -162,7 +162,7 @@ namespace BubbleFruitLoop.Gameplay
         private void Update()
         {
             UpdateJiggle();
-            
+
             if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
             {
                 if (Camera.main == null) return;
@@ -250,13 +250,13 @@ namespace BubbleFruitLoop.Gameplay
         private void ApplySquashScale()
         {
             float scaleY = 1f + currentSquash;
-            float scaleX = 1f - currentSquash * 0.85f; 
-            
+            float scaleX = 1f - currentSquash * 0.85f;
+
             if (visualRoot != transform) // Only scale if it's a child to avoid scaling colliders!
             {
                 visualRoot.localScale = new Vector3(
-                    originalVisualScale.x * scaleX, 
-                    originalVisualScale.y * scaleY, 
+                    originalVisualScale.x * scaleX,
+                    originalVisualScale.y * scaleY,
                     originalVisualScale.z
                 );
             }

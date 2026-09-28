@@ -14,7 +14,7 @@ namespace BubbleFruitLoop.Editor
     public partial class LevelDesignManager : SerializedMonoBehaviour
     {
         // Keep the visible guide and every fruit comfortably inside the glossy
-        // outer shell. These values are also mirrored by LevelLoader at runtime.
+        // outer shell. These values are also mirrored by LevelManager at runtime.
         private const float InnerBoundaryInset = 0.90f;
         private const float FruitRimClearance = 0.52f;
         private const float InitialPackingRatio = 0.76f;
@@ -26,9 +26,9 @@ namespace BubbleFruitLoop.Editor
 
         [Title("Prefabs & Materials")]
         [Required] public BubbleActor bubblePrefab;
-        [Required] public FruitActor fruitPrefab;
+        [Required] public Fruit fruitPrefab;
         [Required] public BoxView box4Prefab;
-        
+
         [Title("Fruit Visuals (Optional)")]
         [LabelText("Box Color Palette")]
         public Material[] fruitMaterials;
@@ -105,7 +105,7 @@ namespace BubbleFruitLoop.Editor
             [HorizontalGroup("Row")]
             [OnValueChanged("OnBoxChanged")]
             public FruitType fruitType = FruitType.Apple;
-            
+
             [HorizontalGroup("Row")]
             [OnValueChanged("OnBoxChanged"), ValueDropdown("GetCapacities")]
             public int capacity = 4;

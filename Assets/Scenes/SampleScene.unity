@@ -931,7 +931,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79d58fa1c3e3d3441a508aca2666b020, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.EditableFruitLoopController
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.FruitLoopManager
   pathAuthoring: {fileID: 511856113}
   loopStart: {fileID: 1832421730}
   waterfallStartPoint: {fileID: 0}
@@ -1004,7 +1004,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9bae1be96409ad48a2e35cf0c6232e6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.EditableBoxBoardController
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.BoxManager
   assignmentTable: {fileID: 912926632}
   layoutBoxes:
   - {fileID: 0}
@@ -1212,7 +1212,7 @@ SpriteMask:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1183783850}
+  m_Sprite: {fileID: 1090369216}
   m_MaskAlphaCutoff: 0.2
   m_FrontSortingLayerID: 0
   m_BackSortingLayerID: 0
@@ -1534,7 +1534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ac225f60e7114409abad386c7f8d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.LoopProgressDisplay
-  loop: {fileID: 511856112}
+  loop: {fileID: 0}
   frameRenderer: {fileID: 1740639716}
   fillRenderer: {fileID: 1202581402}
   countLabel: {fileID: 2045403120}
@@ -2204,38 +2204,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 511856111}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1176452144
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1176452145}
-  m_Layer: 0
-  m_Name: P12
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1176452145
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1176452144}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.79, y: 0.74, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 511856111}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!213 &1183783850
+--- !u!213 &1090369216
 Sprite:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2445,6 +2414,37 @@ Sprite:
   m_Bones: []
   m_ScriptableObjects: []
   m_SpriteID: 
+--- !u!1 &1176452144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1176452145}
+  m_Layer: 0
+  m_Name: P12
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1176452145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1176452144}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.79, y: 0.74, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 511856111}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1202581400
 GameObject:
   m_ObjectHideFlags: 0
@@ -3020,7 +3020,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0213808f3a21f28498085ba4bdfcd44b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.LevelLoader
+  m_EditorClassIdentifier: Assembly-CSharp::BubbleFruitLoop.Gameplay.LevelManager
   loadOnAwake: 1
   currentLevel: {fileID: 11400000, guid: 214a94d9524e0c0428c19d0e0f59cdff, type: 2}
   bubblePrefab: {fileID: 8002406641307014584, guid: 270364c61fc8a9f43a366af3c356cb96, type: 3}

@@ -97,7 +97,7 @@ namespace BubbleFruitLoop.Editor
         }
 
         private BoxConfig AddBox() => AddBoxWithCapacity(4);
-        
+
         private BoxConfig AddBoxWithCapacity(int cap)
         {
             if (!EnsureSeparateContainers() || box4Prefab == null) return null;
@@ -157,14 +157,14 @@ namespace BubbleFruitLoop.Editor
 
             ApplyBubbleScale(cfg);
             float packingRadius = GetFruitContainmentRadius(cfg.instance) * InitialPackingRatio;
-            List<FruitActor> createdFruits = new List<FruitActor>(cfg.fruits.Count);
+            List<Fruit> createdFruits = new List<Fruit>(cfg.fruits.Count);
             for (int i = 0; i < cfg.fruits.Count; i++)
             {
                 FruitType type = cfg.fruits[i];
-                FruitActor fruit = (FruitActor)PrefabUtility.InstantiatePrefab(fruitPrefab, fruitRoot);
+                Fruit fruit = (Fruit)PrefabUtility.InstantiatePrefab(fruitPrefab, fruitRoot);
                 fruit.gameObject.name = $"Fruit_{type}_{i+1}";
                 fruit.Configure(type, GetColorFor(type));
-                
+
                 if (fruitSprites != null && fruitSprites.Length > (int)type && fruitSprites[(int)type] != null)
                     fruit.SetSprite(fruitSprites[(int)type]);
 
@@ -178,7 +178,7 @@ namespace BubbleFruitLoop.Editor
             }
 
             cfg.instance.ReplaceFruits(createdFruits);
-            BubbleFruitMotion motion = cfg.instance.GetComponent<BubbleFruitMotion>();
+            BubbleManager motion = cfg.instance.GetComponent<BubbleManager>();
             if (motion != null)
             {
                 float containmentRadius = GetFruitContainmentRadius(cfg.instance);
@@ -190,7 +190,7 @@ namespace BubbleFruitLoop.Editor
 
         private static float GetFruitContainmentRadius(BubbleActor bubble)
         {
-            // BubbleFruitMotion constrains fruit centres, so reserve at least one
+            // BubbleManager constrains fruit centres, so reserve at least one
             // visible fruit radius plus a small highlight margin at the rim.
             if (bubble != null && bubble.ObstacleCollider is CircleCollider2D circle)
                 return Mathf.Max(0.35f, circle.radius - FruitRimClearance);
@@ -206,7 +206,7 @@ namespace BubbleFruitLoop.Editor
             int siblingIndex = cfg.instance.transform.GetSiblingIndex();
             string objName = cfg.instance.gameObject.name;
             Undo.DestroyObjectImmediate(cfg.instance.gameObject);
-            
+
             cfg.capacity = 4;
             cfg.instance = (BoxView)PrefabUtility.InstantiatePrefab(box4Prefab, boxContainer);
             cfg.instance.transform.position = pos;

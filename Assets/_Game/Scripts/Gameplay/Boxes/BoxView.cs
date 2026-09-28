@@ -33,7 +33,7 @@ namespace BubbleFruitLoop.Gameplay
         [SerializeField] private Transform backShadow;
         [SerializeField] private SpriteRenderer openArtwork;
         [SerializeField] private SpriteRenderer closedArtwork;
-        
+
         [Header("Animation")]
         [SerializeField, Min(0.05f)] private float slideDuration = 0.28f;
         [SerializeField, Range(60f, 88f)] private float doorOpenAngle = 78f;
@@ -42,7 +42,7 @@ namespace BubbleFruitLoop.Gameplay
         [SerializeField, Range(0f, 0.06f)] private float rightDoorDelay = 0.03f;
         [SerializeField, Min(0.05f)] private float exitDuration = 0.42f;
 
-        private readonly List<FruitActor> collectedFruits = new(6);
+        private readonly List<Fruit> collectedFruits = new(6);
         private Vector3 baseScale;
         private Vector3 leftLidOpenPosition;
         private Vector3 rightLidOpenPosition;
@@ -89,7 +89,7 @@ namespace BubbleFruitLoop.Gameplay
 
         public void Configure(FruitType type, int capacity, Color color)
         {
-            // LevelLoader may resize the instance after Awake. Animation must
+            // LevelManager may resize the instance after Awake. Animation must
             // return to that authored/runtime size, never the prefab's old size.
             baseScale = transform.localScale;
             editorFruitType = type;
@@ -151,20 +151,20 @@ namespace BubbleFruitLoop.Gameplay
         }
 
 
-        public void OnSpawned() 
-        { 
+        public void OnSpawned()
+        {
             hidePackedFruitsOnClose = false;
             if (baseScale == Vector3.zero) baseScale = transform.localScale;
             EnsureFrontLip();
-            transform.localScale = baseScale; 
+            transform.localScale = baseScale;
             if (leftLid != null && rightLid != null)
             {
                 leftLidOpenPosition = leftLid.localPosition;
                 rightLidOpenPosition = rightLid.localPosition;
             }
-            SetLidProgress(0f); 
+            SetLidProgress(0f);
         }
-        
+
         public void OnDespawned()
         {
             StopMotion();

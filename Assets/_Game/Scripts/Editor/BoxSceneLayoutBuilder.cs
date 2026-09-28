@@ -82,11 +82,11 @@ namespace BubbleFruitLoop.Editor
         public static void BuildLayout()
         {
             BoxSystemPrefabBuilder.GeneratePrefabs();
-            EditableFruitLoopController loop = Object.FindFirstObjectByType<EditableFruitLoopController>();
+            FruitLoopManager loop = Object.FindFirstObjectByType<FruitLoopManager>();
             Camera camera = Camera.main;
             if (loop == null || camera == null)
             {
-                Debug.LogError("SampleScene needs an EditableFruitLoopController and Main Camera.");
+                Debug.LogError("SampleScene needs an FruitLoopManager and Main Camera.");
                 return;
             }
 
@@ -133,8 +133,8 @@ namespace BubbleFruitLoop.Editor
                 EditorUtility.SetDirty(view);
             }
 
-            EditableBoxBoardController board = loop.GetComponent<EditableBoxBoardController>();
-            if (board == null) board = Undo.AddComponent<EditableBoxBoardController>(loop.gameObject);
+            BoxManager board = loop.GetComponent<BoxManager>();
+            if (board == null) board = Undo.AddComponent<BoxManager>(loop.gameObject);
             Transform[] pickupPoints =
             {
                 GameObject.Find("P1")?.transform,

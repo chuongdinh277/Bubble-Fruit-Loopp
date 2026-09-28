@@ -32,7 +32,7 @@ namespace BubbleFruitLoop.Runtime
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Install()
         {
-            if (FindFirstObjectByType<EditableFruitLoopController>() == null) return;
+            if (FindFirstObjectByType<FruitLoopManager>() == null) return;
             Camera camera = Camera.main;
             if (camera != null && camera.orthographic
                 && camera.GetComponent<ResponsiveGameplayCamera>() == null)

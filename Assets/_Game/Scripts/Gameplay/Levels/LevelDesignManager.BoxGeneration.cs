@@ -124,7 +124,7 @@ namespace BubbleFruitLoop.Editor
         {
 #if UNITY_EDITOR
             LoopPathAuthoring authoring = FindFirstObjectByType<LoopPathAuthoring>();
-            EditableFruitLoopController controller;
+            FruitLoopManager controller;
 
             if (authoring == null)
             {
@@ -132,7 +132,7 @@ namespace BubbleFruitLoop.Editor
                 Undo.RegisterCreatedObjectUndo(pathObject, "Create Fruit Loop Path");
                 pathObject.transform.SetParent(transform, false);
                 authoring = Undo.AddComponent<LoopPathAuthoring>(pathObject);
-                controller = Undo.AddComponent<EditableFruitLoopController>(pathObject);
+                controller = Undo.AddComponent<FruitLoopManager>(pathObject);
 
                 // Matches the oval lane inside the fixed lower funnel. These remain
                 // ordinary child transforms so the designer can fine-tune them.
@@ -157,9 +157,9 @@ namespace BubbleFruitLoop.Editor
             }
             else
             {
-                controller = authoring.GetComponent<EditableFruitLoopController>();
+                controller = authoring.GetComponent<FruitLoopManager>();
                 if (controller == null)
-                    controller = Undo.AddComponent<EditableFruitLoopController>(authoring.gameObject);
+                    controller = Undo.AddComponent<FruitLoopManager>(authoring.gameObject);
             }
 
             Transform loopStart = transform.Find("LoopStart");

@@ -30,18 +30,18 @@ namespace BubbleFruitLoop.Editor
         {
             Transform fruitRoot = bubble.transform.Find("FruitRoot");
             BubbleActor actor = bubble.GetComponent<BubbleActor>();
-            BubbleFruitMotion motion = bubble.GetComponent<BubbleFruitMotion>();
+            BubbleManager motion = bubble.GetComponent<BubbleManager>();
             if (fruitRoot == null || actor == null || motion == null) return;
             ClearChildren(fruitRoot);
 
-            List<FruitActor> fruits = new();
+            List<Fruit> fruits = new();
             for (int index = 0; index < types.Count; index++)
                 fruits.Add(CreateFruit(fruitRoot, types[index], index, types.Count));
             actor.ReplaceFruits(fruits);
             motion.Configure(fruits.ToArray(), seed % 2 == 0 ? 1 : -1, 13.7f + seed);
         }
 
-        private static FruitActor CreateFruit(Transform parent, FruitType type, int index, int count)
+        private static Fruit CreateFruit(Transform parent, FruitType type, int index, int count)
         {
             Sprite sprite = SpriteFor(type);
             GameObject fruitObject = new($"{type}_{index + 1:00}");
@@ -61,7 +61,7 @@ namespace BubbleFruitLoop.Editor
             body.interpolation = RigidbodyInterpolation2D.Interpolate;
             CircleCollider2D collider = fruitObject.AddComponent<CircleCollider2D>();
             collider.radius = sprite.bounds.extents.x * 0.76f;
-            FruitActor actor = fruitObject.AddComponent<FruitActor>();
+            Fruit actor = fruitObject.AddComponent<Fruit>();
             actor.Initialize(body, collider, renderer);
             actor.Configure(type, Color.white);
             actor.OnSpawned();
